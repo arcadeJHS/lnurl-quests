@@ -1,0 +1,41 @@
+name: lnurl_quests
+
+services:
+  python_api:
+    container_name: lnurl_quests_python_api
+    build:
+      context: ./python_api
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./python_api/app:/app
+      - ./python_api/requirements.txt:/requirements.txt
+    environment:
+      - PYTHONPATH=/app
+    command: >
+      sh -c "pip install --no-cache-dir -r /requirements.txt && uvicorn main:app --host 0.0.0.0 --port 5000 --reload"
+    restart: unless-stopped
+    networks:
+      - lnurlQuests
+
+  nestjs_api:
+    container_name: lnurl_quests_nestjs_api
+    build:
+      context: ./nestjs_api
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./nestjs_api:/usr/src/app
+    environment:
+      - NODE_ENV=development
+    command: npm run start:dev
+    depends_on:
+      - python_api
+    restart: unless-stopped
+    networks:
+      - lnurlQuests
+
+networks:
+  lnurlQuests:
