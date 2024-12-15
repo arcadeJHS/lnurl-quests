@@ -1,23 +1,28 @@
 name: lnurl_quests
 
 services:
-  python_api:
-    container_name: lnurl_quests_python_api
-    build:
-      context: ./python_api
-      dockerfile: Dockerfile
-    ports:
-      - "5001:5000"
-    volumes:
-      - ./python_api/app:/app
-      - ./python_api/requirements.txt:/requirements.txt
-    environment:
-      - PYTHONPATH=/app
-    command: >
-      sh -c "pip install --no-cache-dir -r /requirements.txt && uvicorn main:app --host 0.0.0.0 --port 5000 --reload"
+  mongodb:
+    image: mongo:latest
+    container_name: lnurl_quests_mongodb
     restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-secret}
+      MONGO_INITDB_DATABASE: lnurl-quests
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
       - lnurlQuests
+    command: ["--auth", "--bind_ip_all"]
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   nestjs_api:
     container_name: lnurl_quests_nestjs_api
@@ -25,17 +30,22 @@ services:
       context: ./nestjs_api
       dockerfile: Dockerfile
     ports:
-      - "3001:3000"
+      - 3000:3000
+      - 9229:9229
     volumes:
       - ./nestjs_api:/usr/src/app
     environment:
       - NODE_ENV=development
-    command: npm run start:dev
+    command: npm run start:debug
     depends_on:
-      - python_api
+      - mongodb
     restart: unless-stopped
     networks:
       - lnurlQuests
+
+volumes:
+  mongodb_data:
+    name: lnurl-quests-mongodb-data
 
 networks:
   lnurlQuests:
