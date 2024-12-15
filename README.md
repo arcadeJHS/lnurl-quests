@@ -1,6 +1,7 @@
 # LNURL-Quests
 
-A library to automatically mint LNURL whitdrawals [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
+A library to automatically mint LNURL whitdraws.  
+See: [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
 
 Requirements:
 1. git
@@ -37,6 +38,9 @@ docker compose -f docker-compose.dev.yml up --build
 # or (to avoid cache and force rebuild) execute the following two commands 
 docker compose -f docker-compose.dev.yml build --no-cache
 docker compose -f docker-compose.dev.yml up
+
+# if you want to log into a container
+docker compose -f docker-compose.dev.yml exec nestjs_api bash
 ```
 
 Navigate to the API docs here (Swagger): 

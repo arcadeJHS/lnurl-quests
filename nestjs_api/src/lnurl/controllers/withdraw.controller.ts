@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Inject,
   Query,
   UseGuards,
   UsePipes,
@@ -14,6 +15,7 @@ import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { AmountValidator } from '../validators/amount.validator';
 import { ApiHeader } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { LightningBackend } from 'lnurl';
 
 @ApiHeader({
   name: 'X-Api-Key',
@@ -27,22 +29,31 @@ export class WithdrawController {
     private readonly withdrawService: WithdrawService,
     private readonly amountValidator: AmountValidator,
     private readonly configService: ConfigService,
+    @Inject('LightningService')
+    private lightningService: LightningBackend,
   ) {}
 
   @Get('generateLnurlLink')
   @Throttle({ default: { limit: 10, ttl: 60 } })
   @UsePipes(new ValidationPipe({ transform: true }))
   async createLnurlLink() {
+    // TODO: add input params to identify the generated link (which maybe will be used to generate the hash/UUID)
     // TODO: add to DB with params like UUID or hash to identify (in the future, on DB) the generated link
-    const baseUrl = this.configService.get('app.baseUrl');
-    const lnurl = this.lnurlService.generateLnurlLink(
-      `${baseUrl}/api/lnurl/withdraw`,
-      '1234abc4bebebebeb',
-    );
+    const lnurl = await this.lightningService.generateWithdrawUrl({
+      minWithdrawable: 100,
+      maxWithdrawable: 200,
+      defaultDescription: 'LNURL Withdrawal test',
+    });
+
+    // const baseUrl = this.configService.get('app.baseUrl');
+    // const lnurl = this.lnurlService.generateLnurlLink(
+    //   `${baseUrl}/api/withdraw/generateWithdrawParams`,
+    //   '1234abc4bebebebeb',
+    // );
     return lnurl;
   }
 
-  @Get('withdraw')
+  @Get('generateWithdrawParams')
   @Throttle({ default: { limit: 10, ttl: 60 } })
   @UsePipes(new ValidationPipe({ transform: true }))
   async createWithdraw(@Query() createWithdrawDto: CreateWithdrawDto) {

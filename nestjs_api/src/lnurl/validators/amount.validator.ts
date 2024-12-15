@@ -11,11 +11,15 @@ export class AmountValidator {
     const min = this.configService.get<number>('lightning.minWithdrawAmount');
 
     if (maxAmount > (max || 0)) {
-      throw new BadRequestException(`Amount exceeds maximum limit of ${maxAmount}`);
+      throw new BadRequestException(
+        `Amount exceeds maximum limit of ${maxAmount}`,
+      );
     }
 
     if (minAmount < (min || 0)) {
-      throw new BadRequestException(`Amount below minimum limit of ${minAmount}`);
+      throw new BadRequestException(
+        `Amount below minimum limit of ${minAmount}`,
+      );
     }
   }
 }

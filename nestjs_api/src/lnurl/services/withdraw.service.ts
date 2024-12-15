@@ -1,11 +1,19 @@
+/**
+ *
+ * NOTE: DEPRECATED (use lnbits-lightning.service.ts instead)
+ * TODO: Remove this file
+ *
+ */
+
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import { WithdrawRepository } from '../repositories/withdraw.repository';
 import { QRService } from './qr.service';
-import { BaseLightningService } from './base-lightning.service';
+// import { BaseLightningService } from './base-lightning.service';
 import { WithdrawResponse } from '../interfaces/withdraw.interface';
 import { generateLnurl } from '../utils/lnurl.utils';
+import { LightningBackend } from 'lnurl';
 
 @Injectable()
 export class WithdrawService {
@@ -14,7 +22,7 @@ export class WithdrawService {
     private configService: ConfigService,
     private qrService: QRService,
     @Inject('LightningService')
-    private lightningService: BaseLightningService,
+    private lightningService: LightningBackend,
   ) {}
 
   async generateWithdraw(
@@ -46,7 +54,7 @@ export class WithdrawService {
       throw new Error('Invalid or already used withdrawal');
     }
 
-    const payment = await this.lightningService.makePayment(pr);
+    const payment = await this.lightningService.payInvoice(pr);
     await this.withdrawRepository.markAsUsed(
       withdraw._id,
       payment.payment_hash || '',

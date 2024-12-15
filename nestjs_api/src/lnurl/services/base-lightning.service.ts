@@ -3,5 +3,5 @@ import { LightningPaymentResponse } from '../interfaces/withdraw.interface';
 
 @Injectable()
 export abstract class BaseLightningService {
-  abstract makePayment(bolt11: string): Promise<LightningPaymentResponse>;
+  abstract payInvoice(bolt11: string): Promise<LightningPaymentResponse>;
 }

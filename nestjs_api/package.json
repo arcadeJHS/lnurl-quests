@@ -9,7 +9,6 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug 0.0.0.0:9229 --watch",
-   
     "build": "nest build",
     "start:prod": "node dist/main",
     "test": "jest"
@@ -33,6 +32,7 @@
     "ecpair": "^3.0.0-rc.0",
     "express-rate-limit": "^7.1.1",
     "helmet": "^7.2.0",
+    "lightning-backends": "^1.7.0",
     "lnurl": "^0.27.0",
     "mongoose": "^7.6.3",
     "qrcode": "^1.5.4",
