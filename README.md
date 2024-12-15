@@ -1,6 +1,6 @@
 # LNURL-Quests
 
-A library to automatically emit LNURL whitdrawals [LUD-03: withdrawReques](https://github.com/lnurl/luds/blob/luds/03.md).
+A library to automatically mint LNURL whitdrawals [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
 
 Requirements:
 1. git
@@ -14,7 +14,7 @@ git clone https://github.com/arcadeJHS/lnurl-quests.git
 cd lnurl-quests
 ```
 
-Add your ```.env``` configuration file in the root of the ```nestjs_api``` folder.
+Add your ```.env``` configuration file in the root of the ```nestjs_api``` folder.  
 An example configuration is provided in ```.env.example```:
 ```
 MONGODB_URI=mongodb://lnurl_user:lnurl_password@localhost:27017/lnurl-quests
@@ -39,14 +39,15 @@ docker compose -f docker-compose.dev.yml build --no-cache
 docker compose -f docker-compose.dev.yml up
 ```
 
+Navigate to the API docs here (Swagger): 
+``` 
+http://localhost:3001/api
+``` 
+
 ## Debugging (optional)
 If you are using Visual Studio Code, a debug ready launch configuration is provided.  
 Go to the "Run and Debug" tab and launch "Docker attach to NodeJS".  
 You can edit the launch config in ```.vscode/launch.json```.  
-
-## NestJs API:
-Once the app is up and running, the NestJs api is documented by swagger here:
-http://localhost:3001/api
 
 ## Curl NextJS API
 ```bash
@@ -55,6 +56,8 @@ curl 'http://localhost:3000/api/withdraw/generateLnurlLink?uuid=1234abc4bebebebe
 
 ## References and Useful links
 https://lightningdecoder.com/
+
+https://github.com/lnurl/luds/blob/luds/03.md
 
 Test a LN nodes network with Polar?
 https://lightningpolar.com/
