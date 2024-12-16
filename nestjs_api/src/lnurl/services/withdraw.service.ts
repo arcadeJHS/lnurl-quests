@@ -1,6 +1,6 @@
 /**
  *
- * NOTE: DEPRECATED (use lnbits-lightning.service.ts instead)
+ * NOTE: TO BE DEPRECATED (move to lnbits-lightning.service.ts instead)
  * TODO: Remove this file
  *
  */
