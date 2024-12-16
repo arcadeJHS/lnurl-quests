@@ -109,7 +109,7 @@ export class LnbitsLightningService implements OnModuleInit {
 
   async onModuleInit() {
     this.lnurlServer = lnurl.createServer({
-      // TODO: add the correct host and port from .env
+      // TODO: define host and port from in .env
       host: 'localhost',
       port: 3000,
       endpoint: '/generateWithdrawParams',
@@ -119,30 +119,30 @@ export class LnbitsLightningService implements OnModuleInit {
         url: this.configService.get('lightning.lnbitsUrl'),
       }),
     });
-
-    this.lnurlServer.on(
-      'withdrawRequest',
-      this.handleWithdrawRequest.bind(this),
-    );
   }
 
   // TODO: add DB management for the following methods
 
-  // 1) replace the manual "lnurl.encode()"
+  // 1) Generate withdraw url
   async generateWithdrawUrl(params: {
     minWithdrawable: number;
     maxWithdrawable: number;
     defaultDescription: string;
   }): Promise<LNBitsGenerateWithdrawUrlResponse> {
+    // Todo: check validity of request, check funds...
     return this.lnurlServer.generateNewUrl('withdrawRequest', params);
   }
 
-  // 2) the client follow the url generate at step 1 and calls this method
+  // 2) The user's wallet follow the url generate at step 1 and calls this method to get withdraw params
   async handleWithdrawRequest(params) {
+    // Note: k1 is the "secret" param generated in the previous "this.lnurlServer.generateNewUrl" step.
     const { minWithdrawable, maxWithdrawable, defaultDescription, k1 } = params;
 
     return {
       tag: 'withdrawRequest',
+      // Note: when the wallet calls this callback url
+      // it will automatically append also the "pr" param as a query param.
+      // TODO: verify this is really the case (are we getting the "pr" param when the wallet calls the callback?)
       callback: `${this.configService.get('app.baseUrl')}/withdraw/callback?k1=${k1}`,
       k1: k1,
       minWithdrawable: minWithdrawable,
@@ -151,7 +151,17 @@ export class LnbitsLightningService implements OnModuleInit {
     };
   }
 
-  // 3) step2 callback handling
+  // 3) Callback handling
+  /**
+   * As noted in the previous step (handleWithdrawRequest):
+   * when the wallet calls the callback url, it will automatically append also the "pr" param as a query param.
+   
+    The flow for obtaining the "pr" parameter is as follows:
+      - The server generates a withdraw URL using server.generateNewUrl('withdrawRequest').
+      - The user's wallet accesses this URL and receives a JSON response (by the handleWithdrawRequest method) containing withdrawal parameters.
+      - The wallet should now generate a bolt11 invoice, and send a GET request to the callback URL, including the "pr" as a query parameter.
+      - The server receives this request, and extracts the "pr" parameter in the handleWithdrawCallback method. 
+   */
   async handleWithdrawCallback(k1: string, pr: string) {
     try {
       const paymentHash = await this.lnurlServer.lightning.payInvoice(pr);
