@@ -8,3 +8,9 @@ export interface LightningPaymentResponse {
   status: string;
   payment_hash?: string;
 }
+
+export interface LNBitsGenerateWithdrawUrlResponse {
+  encoded: string;
+  secret: string;
+  url: string;
+}

@@ -44,6 +44,7 @@ import * as lnurl from 'lnurl';
 import { LightningBackend } from 'lnurl';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
+import { LNBitsGenerateWithdrawUrlResponse } from '../interfaces/withdraw.interface';
 
 class LNBitsBackend extends LightningBackend {
   private options: { apiKey: string; url: string };
@@ -132,7 +133,7 @@ export class LnbitsLightningService implements OnModuleInit {
     minWithdrawable: number;
     maxWithdrawable: number;
     defaultDescription: string;
-  }) {
+  }): Promise<LNBitsGenerateWithdrawUrlResponse> {
     return this.lnurlServer.generateNewUrl('withdrawRequest', params);
   }
 
@@ -142,7 +143,7 @@ export class LnbitsLightningService implements OnModuleInit {
 
     return {
       tag: 'withdrawRequest',
-      callback: `https://your-server.com/withdraw/callback?k1=${k1}`,
+      callback: `${this.configService.get('app.baseUrl')}/withdraw/callback?k1=${k1}`,
       k1: k1,
       minWithdrawable: minWithdrawable,
       maxWithdrawable: maxWithdrawable,

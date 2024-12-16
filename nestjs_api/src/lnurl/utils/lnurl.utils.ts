@@ -1,3 +1,9 @@
+/**
+ *
+ * NOTE: TO BE DEPRECATED
+ * TODO: Remove this file
+ *
+ */
 export function generateLnurl(baseUrl: string, withdraw: any): string {
   const params = new URLSearchParams({
     tag: 'withdrawRequest',
