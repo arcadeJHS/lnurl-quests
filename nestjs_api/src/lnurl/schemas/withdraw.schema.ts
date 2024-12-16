@@ -10,10 +10,10 @@ export class Withdraw extends Document {
   maxWithdrawable: number;
 
   @Prop({ required: true })
-  defaultDescription: string;
-
-  @Prop({ required: true })
   minWithdrawable: number;
+
+  @Prop()
+  defaultDescription?: string;
 
   @Prop({ default: false })
   used: boolean;

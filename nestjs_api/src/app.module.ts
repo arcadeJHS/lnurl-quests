@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
 import { LnurlModule } from './lnurl/lnurl.module';
+import { QuestModule } from './quest/quest.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -11,6 +12,7 @@ import configuration from './config/configuration';
       isGlobal: true,
       load: [configuration],
     }),
+
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -23,6 +25,7 @@ import configuration from './config/configuration';
         ],
       }),
     }),
+
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -33,6 +36,7 @@ import configuration from './config/configuration';
       inject: [ConfigService],
     }),
     LnurlModule,
+    QuestModule,
   ],
 })
 export class AppModule {}
