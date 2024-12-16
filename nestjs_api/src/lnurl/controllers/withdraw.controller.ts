@@ -7,11 +7,15 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { WithdrawService } from '../services/withdraw.service';
-import { CreateWithdrawDto, WithdrawCallbackDto } from '../dto/withdraw.dto';
+import {
+  CreateWithdrawDto,
+  WithdrawCallbackDto,
+  HandleWithdrawRequestDto,
+} from '../dto/withdraw.dto';
 import { ApiKeyGuard } from '@common/guards/api-key.guard';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { AmountValidator } from '../validators/amount.validator';
+import { K1Validator } from '../validators/k1.validator';
 import { ApiHeader } from '@nestjs/swagger';
 import { LightningBackend } from 'lnurl';
 
@@ -23,8 +27,8 @@ import { LightningBackend } from 'lnurl';
 @UseGuards(ApiKeyGuard, ThrottlerGuard)
 export class WithdrawController {
   constructor(
-    private readonly withdrawService: WithdrawService,
     private readonly amountValidator: AmountValidator,
+    private readonly k1Validator: K1Validator,
     @Inject('LightningService')
     private lightningService: LightningBackend,
   ) {}
@@ -38,6 +42,14 @@ export class WithdrawController {
       createWithdrawDto.maxAmount,
     );
 
+    /**
+     * This method generates a withdraw URL similar to:
+     * "http://localhost:3000/generateWithdrawParams?q=fde2c82bdc78ff7eda48de478a9412d785fa988cc1f16c8e89c0a82af138168b"
+     *
+     * Here, the "q" param is the "lnurl.secret" that will be used to uniquely identify the withdraw in subsequent operations.
+     * TODO: add the withdraw request params to DB, using the param "lnurl.secret" as UUID to identify it in subsequent operations
+     * TODO: params to add to DB: secret (as ID), minWithdrawable, maxWithdrawable, defaultDescription
+     */
     const lnurl = await this.lightningService.generateWithdrawUrl({
       minWithdrawable: createWithdrawDto.minAmount,
       maxWithdrawable: createWithdrawDto.maxAmount,
@@ -45,31 +57,31 @@ export class WithdrawController {
         createWithdrawDto.defaultDescription || 'LNURL Withdrawal test',
     });
 
-    // TODO: add the generated withdraw to DB, using the param "lnurl.secret" as UUID to identify it in subsequent operations
-
     return lnurl;
   }
 
-  @Get('generateWithdrawParams')
+  @Get('handleWithdrawRequest')
   @Throttle({ default: { limit: 10, ttl: 60 } })
   @UsePipes(new ValidationPipe({ transform: true }))
-  async createWithdraw(@Query() createWithdrawDto: CreateWithdrawDto) {
-    this.amountValidator.validate(
-      createWithdrawDto.minAmount,
-      createWithdrawDto.maxAmount,
-    );
+  async createWithdraw(
+    @Query() handleWithdrawRequestDto: HandleWithdrawRequestDto,
+  ) {
+    this.k1Validator.validate(handleWithdrawRequestDto.q);
 
-    return this.withdrawService.generateWithdraw(
-      createWithdrawDto.minAmount,
-      createWithdrawDto.maxAmount,
-      createWithdrawDto.defaultDescription,
-    );
+    const params = await this.lightningService.handleWithdrawRequest({
+      q: handleWithdrawRequestDto.q,
+    });
+
+    return params;
   }
 
-  @Get('withdraw/callback')
+  @Get('handleWithdrawCallback')
   @Throttle({ default: { limit: 20, ttl: 60 } })
   @UsePipes(new ValidationPipe({ transform: true }))
   async handleCallback(@Query() callbackDto: WithdrawCallbackDto) {
-    return this.withdrawService.handleCallback(callbackDto.k1, callbackDto.pr);
+    return this.lightningService.handleWithdrawCallback(
+      callbackDto.k1,
+      callbackDto.pr,
+    );
   }
 }

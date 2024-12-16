@@ -1,4 +1,4 @@
-import { IsNumber, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateWithdrawDto {
@@ -13,7 +13,16 @@ export class CreateWithdrawDto {
   maxAmount: number;
 
   @ApiProperty({ required: false })
-  defaultDescription: string;
+  @IsOptional()
+  @IsString()
+  defaultDescription?: string;
+}
+
+export class HandleWithdrawRequestDto {
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  q: string;
 }
 
 export class WithdrawCallbackDto {
