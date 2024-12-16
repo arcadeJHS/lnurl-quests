@@ -33,7 +33,7 @@ export class WithdrawController {
     private lightningService: LightningBackend,
   ) {}
 
-  @Get('generateLnurlLink')
+  @Get('generateWithdrawUrl')
   @Throttle({ default: { limit: 10, ttl: 60 } })
   @UsePipes(new ValidationPipe({ transform: true }))
   async createLnurlLink() {

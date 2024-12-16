@@ -30,6 +30,8 @@ MIN_WITHDRAW_AMOUNT=50
 ALLOWED_ORIGINS=http://localhost:3000,https://other-domain.com
 ```
 
+> Note: API reuests need to be authorized by a ```X-Api-Key``` in the header of the request.   > Use the param ```API_KEY``` in the .env file.
+
 Start the Docker containers:
 
 ```bash
@@ -48,15 +50,15 @@ Navigate to the API docs here (Swagger):
 http://localhost:3001/api
 ``` 
 
+You can also curl the API:
+```bash
+curl 'http://localhost:3000/api/withdraw/generateWithdrawUrl?uuid=1234abc4bebebebeb' -H "X-Api-Key: <your-api-key>"
+``` 
+
 ## Debugging (optional)
 If you are using Visual Studio Code, a debug ready launch configuration is provided.  
 Go to the "Run and Debug" tab and launch "Docker attach to NodeJS".  
 You can edit the launch config in ```.vscode/launch.json```.  
-
-## Curl NextJS API
-```bash
-curl 'http://localhost:3000/api/withdraw/generateLnurlLink?uuid=1234abc4bebebebeb' -H "X-Api-Key: <your-api-key>"
-``` 
 
 ## References and Useful links
 https://lightningdecoder.com/
@@ -69,7 +71,7 @@ https://lightningpolar.com/
 ## TODO
 1. Add tests
 2. Add i18n
-3. Is it possible to use Breez SDK to claim a paiment (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html)?
+3. Is it possible to use something more robust and reliable like Greenlight or Breez SDK to handle LNURL operations? Maybe in the future (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html)...
 
 ## Usecases
 1. Let's say a famous influencer from CompanyA is holding a talk on X.
