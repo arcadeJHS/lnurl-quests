@@ -60,6 +60,11 @@ If you are using Visual Studio Code, a debug ready launch configuration is provi
 Go to the "Run and Debug" tab and launch "Docker attach to NodeJS".  
 You can edit the launch config in ```.vscode/launch.json```.  
 
+## TODO
+1. Currently operations which involve LNURL and payment management are handled by the  ```lnurl-node``` package (https://www.npmjs.com/package/lnurl).  
+   Is it possible to use something more robust and reliable like Greenlight or Breez SDK to handle LNURL operations? Maybe in the future (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html)...
+3. Add tests.
+
 ## References and Useful links
 https://lightningdecoder.com/
 
@@ -67,11 +72,6 @@ https://github.com/lnurl/luds/blob/luds/03.md
 
 Test a LN nodes network with Polar?
 https://lightningpolar.com/
-
-## TODO
-1. Add tests
-2. Add i18n
-3. Is it possible to use something more robust and reliable like Greenlight or Breez SDK to handle LNURL operations? Maybe in the future (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html)...
 
 ## Usecases
 1. Let's say a famous influencer from CompanyA is holding a talk on X.
