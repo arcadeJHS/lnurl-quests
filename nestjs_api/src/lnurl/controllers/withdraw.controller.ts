@@ -32,14 +32,21 @@ export class WithdrawController {
   @Get('generateWithdrawUrl')
   @Throttle({ default: { limit: 10, ttl: 60 } })
   @UsePipes(new ValidationPipe({ transform: true }))
-  async createLnurlLink() {
-    // TODO: add input params to identify the generated link (which maybe will be used to generate the hash/UUID)
-    // TODO: add to DB with params like UUID or hash to identify (in the future, on DB) the generated link
+  async generateWithdrawUrl(@Query() createWithdrawDto: CreateWithdrawDto) {
+    this.amountValidator.validate(
+      createWithdrawDto.minAmount,
+      createWithdrawDto.maxAmount,
+    );
+
     const lnurl = await this.lightningService.generateWithdrawUrl({
-      minWithdrawable: 100,
-      maxWithdrawable: 200,
-      defaultDescription: 'LNURL Withdrawal test',
+      minWithdrawable: createWithdrawDto.minAmount,
+      maxWithdrawable: createWithdrawDto.maxAmount,
+      defaultDescription:
+        createWithdrawDto.defaultDescription || 'LNURL Withdrawal test',
     });
+
+    // TODO: add the generated withdraw to DB, using the param "lnurl.secret" as UUID to identify it in subsequent operations
+
     return lnurl;
   }
 
@@ -51,6 +58,7 @@ export class WithdrawController {
       createWithdrawDto.minAmount,
       createWithdrawDto.maxAmount,
     );
+
     return this.withdrawService.generateWithdraw(
       createWithdrawDto.minAmount,
       createWithdrawDto.maxAmount,
