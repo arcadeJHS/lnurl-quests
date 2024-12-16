@@ -62,8 +62,9 @@ You can edit the launch config in ```.vscode/launch.json```.
 
 ## TODO
 1. Currently operations which involve LNURL and payment management are handled by the  ```lnurl-node``` package (https://www.npmjs.com/package/lnurl) and LNBits API (https://lnbits.com/).  
-   Is it possible to use something more robust/reliable like Greenlight or Breez SDK to handle LNURL operations? Maybe in the future (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html)...
-3. Add tests.
+   Is it possible to use something more robust/reliable like Greenlight or Breez SDK to handle LNURL operations?  
+   Probably it's possible to receive payments with the Breeze SDK (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html).
+2. Add tests.
 
 ## References and Useful links
 https://lightningdecoder.com/
