@@ -33,6 +33,12 @@
 // }
 //==============================================================================
 
+/**
+ * This service extends a generic LightningBackend object.
+ * LightningBackend is intended here as the basic interface which defines withdraw operations.
+ * Here we are extending LightningBackend to implement withdraw operations through a LNBits instance.
+ * In the future, we could extends LightningBackend to implement withdraw operations through other lightning services.
+ */
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as lnurl from 'lnurl';
 import { LightningBackend } from 'lnurl';
