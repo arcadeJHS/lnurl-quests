@@ -1,13 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import * as mongoose from 'mongoose';
-import AutoIncrementFactory from 'mongoose-sequence';
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true }) // automatically handle "createdAt" field
 export class Quest extends Document {
-  @Prop({ required: true })
-  id: number;
-
   @Prop({ required: true })
   title: string;
 
@@ -37,18 +32,3 @@ export class Quest extends Document {
 }
 
 export const QuestSchema = SchemaFactory.createForClass(Quest);
-
-const AutoIncrement = AutoIncrementFactory(mongoose);
-QuestSchema.plugin(AutoIncrement, { inc_field: 'id' });
-
-/**
- * Creating a new quest the id field will auto-increment:
- *
- * const newQuest = new this.questModel({
- *  ...
- * });
- *
- * await newQuest.save();
- *
- * console.log(newQuest.id);
- */

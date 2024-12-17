@@ -6,8 +6,7 @@ import {
   IsOptional,
   IsString,
   IsDate,
-  IsNotEmptyObject,
-  ValidateNested,
+  IsObject,
 } from 'class-validator';
 
 export class BaseQuestDto {
@@ -34,18 +33,17 @@ export class BaseQuestDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsDate()
-  // With transform: true, input like "2024-12-15T20:24:05Z" will be converted to a Date
+  @Type(() => Date)
   startDate: Date;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsDate()
+  @Type(() => Date)
   endDate: Date;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNotEmptyObject()
-  @ValidateNested()
-  @Type(() => Object)
+  @IsObject()
   conditions: Record<string, any>;
 }
