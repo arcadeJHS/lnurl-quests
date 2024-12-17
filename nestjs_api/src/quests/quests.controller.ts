@@ -20,7 +20,7 @@ import { ApiKeyGuard } from '@common/guards/api-key.guard';
   name: 'X-Api-Key',
   description: 'Authorization key',
 })
-@Controller('api/quests')
+@Controller('quests')
 @UseGuards(ApiKeyGuard)
 export class QuestsController {
   constructor(private readonly service: QuestsService) {}

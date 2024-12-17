@@ -23,7 +23,7 @@ import { LightningBackend } from 'lnurl';
   name: 'X-Api-Key',
   description: 'Authorization key',
 })
-@Controller('api/withdraw')
+@Controller('withdraw')
 @UseGuards(ApiKeyGuard, ThrottlerGuard)
 export class WithdrawController {
   constructor(

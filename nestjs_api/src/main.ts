@@ -23,7 +23,7 @@ async function bootstrap() {
   app.use(helmet());
   app.enableCors({
     origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Api-Key'],
   });
 
@@ -40,6 +40,9 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
+
+  // Set the global prefix "api/" controllers wide
+  app.setGlobalPrefix('api');
 
   await app.listen(process.env.PORT || 3000);
 }
