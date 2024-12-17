@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
 import { LnurlModule } from './lnurl/lnurl.module';
-import { QuestModule } from './quest/quest.module';
+import { QuestModule } from './quests/quests.module';
 import configuration from './config/configuration';
 
 @Module({

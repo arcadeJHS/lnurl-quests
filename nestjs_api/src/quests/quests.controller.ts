@@ -11,11 +11,11 @@ import {
 } from '@nestjs/common';
 import { CreateQuestDto } from './dto/create-quest.dto';
 import { UpdateQuestDto } from './dto/update-quest.dto';
-import { QuestService } from './quest.service';
+import { QuestsService } from './quests.service';
 
 @Controller('quests')
-export class QuestController {
-  constructor(private readonly service: QuestService) {}
+export class QuestsController {
+  constructor(private readonly service: QuestsService) {}
 
   @Get()
   async index() {

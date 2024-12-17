@@ -6,7 +6,7 @@ import { CreateQuestDto } from '../dto/create-quest.dto';
 import { UpdateQuestDto } from '../dto/update-quest.dto';
 
 @Injectable()
-export class QuestRepository {
+export class QuestsRepository {
   constructor(@InjectModel(Quest.name) private questModel: Model<Quest>) {}
 
   async create(createQuestDto: CreateQuestDto): Promise<Quest> {
