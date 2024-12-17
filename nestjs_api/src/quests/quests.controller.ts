@@ -10,8 +10,7 @@ import {
   ValidationPipe,
   UseGuards,
 } from '@nestjs/common';
-import { CreateQuestDto } from './dto/create-quest.dto';
-import { UpdateQuestDto } from './dto/update-quest.dto';
+import { QuestDto } from './dto/quest.dto';
 import { ValidateQuestDto } from './dto/validate-quest.dto';
 import { QuestsService } from './quests.service';
 import { ApiHeader } from '@nestjs/swagger';
@@ -38,17 +37,14 @@ export class QuestsController {
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
-  async create(@Body() createQuestDto: CreateQuestDto) {
-    return await this.service.create(createQuestDto);
+  async create(@Body() questDto: QuestDto) {
+    return await this.service.create(questDto);
   }
 
   @Put(':id')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async update(
-    @Param('id') id: string,
-    @Body() updateQuestDto: UpdateQuestDto,
-  ) {
-    return await this.service.update(id, updateQuestDto);
+  async update(@Param('id') id: string, @Body() questDto: QuestDto) {
+    return await this.service.update(id, questDto);
   }
 
   @Delete(':id')

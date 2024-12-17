@@ -7,9 +7,10 @@ import {
   IsString,
   IsDate,
   IsObject,
+  IsBoolean,
 } from 'class-validator';
 
-export class BaseQuestDto {
+export class QuestDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -41,6 +42,16 @@ export class BaseQuestDto {
   @IsDate()
   @Type(() => Date)
   endDate: Date;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  claimedRewards?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  active?: number;
 
   @ApiProperty()
   @IsNotEmpty()

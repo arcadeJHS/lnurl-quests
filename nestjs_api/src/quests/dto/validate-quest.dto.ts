@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsObject } from 'class-validator';
 
 export class ValidateQuestDto {
   @ApiProperty()
@@ -9,6 +9,8 @@ export class ValidateQuestDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  answer?: string;
+  @IsObject()
+  // TODO: define a better typescript interface that "any"
+  // scenario is the answer/solution submitted by the user
+  scenario: Record<string, any>;
 }

@@ -2,15 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Quest } from '../schemas/quest.schema';
-import { CreateQuestDto } from '../dto/create-quest.dto';
-import { UpdateQuestDto } from '../dto/update-quest.dto';
+import { QuestDto } from '../dto/quest.dto';
 
 @Injectable()
 export class QuestsRepository {
   constructor(@InjectModel(Quest.name) private questModel: Model<Quest>) {}
 
-  async create(createQuestDto: CreateQuestDto): Promise<Quest> {
-    const quest = new this.questModel(createQuestDto);
+  async create(questDto: QuestDto): Promise<Quest> {
+    const quest = new this.questModel(questDto);
     return quest.save();
   }
 
@@ -22,8 +21,8 @@ export class QuestsRepository {
     return await this.questModel.findById(id).exec();
   }
 
-  async update(id: string, updateQuestDto: UpdateQuestDto): Promise<Quest> {
-    return await this.questModel.findByIdAndUpdate(id, updateQuestDto).exec();
+  async update(id: string, questDto: QuestDto): Promise<Quest> {
+    return await this.questModel.findByIdAndUpdate(id, questDto).exec();
   }
 
   async delete(id: string): Promise<Quest> {
