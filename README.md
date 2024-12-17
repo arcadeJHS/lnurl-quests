@@ -1,6 +1,7 @@
 # LNURL-Quests
 
-A library to automatically mint LNURL whitdraws.  
+A core and basic implementation of a REST API able to automatically reward users for quest completion by paying through LNURL-withdraw.
+
 See: [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
 
 Requirements:
