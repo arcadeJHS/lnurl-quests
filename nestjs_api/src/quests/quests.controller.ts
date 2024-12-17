@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { CreateQuestDto } from './dto/create-quest.dto';
 import { UpdateQuestDto } from './dto/update-quest.dto';
+import { ValidateQuestDto } from './dto/validate-quest.dto';
 import { QuestsService } from './quests.service';
 import { ApiHeader } from '@nestjs/swagger';
 import { ApiKeyGuard } from '@common/guards/api-key.guard';
@@ -53,5 +54,11 @@ export class QuestsController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return await this.service.delete(id);
+  }
+
+  @Post('validate')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async validate(@Body() validateQuestDto: ValidateQuestDto) {
+    return await this.service.validateQuest(validateQuestDto);
   }
 }

@@ -21,7 +21,9 @@
     "paths": {
       "@common/*": ["src/common/*"],
       "@config/*": ["src/config/*"],
-      "@lnurl/*": ["src/lnurl/*"]
+      "@lnurl/*": ["src/lnurl/*"],
+      "@claim/*": ["src/claim/*"],
+      "@quests/*": ["src/quests/*"]
     }
   }
 }

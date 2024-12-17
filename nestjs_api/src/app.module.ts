@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
 import { LnurlModule } from './lnurl/lnurl.module';
 import { QuestModule } from './quests/quests.module';
+import { ClaimModule } from './claim/claim.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -38,6 +39,7 @@ import configuration from './config/configuration';
 
     LnurlModule,
     QuestModule,
+    ClaimModule,
   ],
 })
 export class AppModule {}

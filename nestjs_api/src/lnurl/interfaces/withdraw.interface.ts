@@ -1,3 +1,5 @@
+import { LnurlData } from '../../common/interfaces/lnurl-data.interface';
+
 export interface WithdrawResponse {
   lnurl: string;
   qr: string;
@@ -9,8 +11,4 @@ export interface LightningPaymentResponse {
   payment_hash?: string;
 }
 
-export interface LNBitsGenerateWithdrawUrlResponse {
-  encoded: string;
-  secret: string;
-  url: string;
-}
+export interface LNBitsGenerateWithdrawUrlResponse extends LnurlData {}
