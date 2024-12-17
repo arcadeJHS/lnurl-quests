@@ -65,9 +65,10 @@ You can edit the launch config in ```.vscode/launch.json```.
 1. Currently operations which involve LNURL and payment management are handled by the  ```lnurl-node``` package (https://www.npmjs.com/package/lnurl) and ```LNBits API``` (https://lnbits.com/).  
    Is it possible to use something more robust/reliable like Greenlight or Breez SDK to handle LNURL operations?  
    Probably it's possible to receive payments with the Breeze SDK (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html).
-2. Improve API error management and output documentation for Swagger.
-3. Add tests.
-4. Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
+2. Migrate from LNRL-whithdraw to Bolt12?
+3. Improve API error management and output documentation for Swagger.
+4. Add tests.
+5. Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
 
 ## References and Useful links
 Lightning decoder: https://lightningdecoder.com/
