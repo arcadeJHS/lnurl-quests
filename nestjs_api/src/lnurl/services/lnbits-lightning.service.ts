@@ -147,7 +147,7 @@ export class LnbitsLightningService implements OnModuleInit {
       // Note: when the wallet calls this callback url
       // it will automatically append also the "pr" param as a query param.
       // TODO: verify this is really the case (are we getting the "pr" param when the wallet calls the callback?)
-      callback: `${this.configService.get('app.baseUrl')}/api/withdraw/handleWithdrawCallback?k1=${k1}`,
+      callback: `${this.configService.get('app.baseUrl')}/api/lnurl/handleWithdrawCallback?k1=${k1}`,
       k1: k1,
       minWithdrawable: minWithdrawable,
       maxWithdrawable: maxWithdrawable,
@@ -164,7 +164,7 @@ export class LnbitsLightningService implements OnModuleInit {
       - The server generates a withdraw URL using server.generateNewUrl('withdrawRequest').
       - The user's wallet accesses this URL and receives a JSON response (by the handleWithdrawRequest method) containing withdrawal parameters.
       - The wallet should now generate a bolt11 invoice, and send a GET request to the callback URL, including the "pr" as a query parameter.
-      - The final url user's wallet will call would be something similar to: ${this.configService.get('app.baseUrl')}/api/withdraw/handleWithdrawCallback?k1=${k1}&pr=lnbc...
+      - The final url user's wallet will call would be something similar to: ${this.configService.get('app.baseUrl')}/api/lnurl/handleWithdrawCallback?k1=${k1}&pr=lnbc...
       - This flow should be handled automatically by LNURL compatible wallets.
       - The server receives this request, and extracts the "pr" parameter in the handleWithdrawCallback method. 
    */

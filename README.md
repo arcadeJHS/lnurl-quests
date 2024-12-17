@@ -52,7 +52,7 @@ http://localhost:3001/api
 
 You can also curl the API:
 ```bash
-curl 'http://localhost:3000/api/withdraw/generateWithdrawUrl?uuid=1234abc4bebebebeb' -H "X-Api-Key: <your-api-key>"
+curl 'http://localhost:3000/api/lnurl/generateWithdrawUrl?uuid=1234abc4bebebebeb' -H "X-Api-Key: <your-api-key>"
 ``` 
 
 ## Debugging (optional)
