@@ -8,12 +8,20 @@ import {
   Put,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateQuestDto } from './dto/create-quest.dto';
 import { UpdateQuestDto } from './dto/update-quest.dto';
 import { QuestsService } from './quests.service';
+import { ApiHeader } from '@nestjs/swagger';
+import { ApiKeyGuard } from '@common/guards/api-key.guard';
 
-@Controller('quests')
+@ApiHeader({
+  name: 'X-Api-Key',
+  description: 'Authorization key',
+})
+@Controller('api/quests')
+@UseGuards(ApiKeyGuard)
 export class QuestsController {
   constructor(private readonly service: QuestsService) {}
 
