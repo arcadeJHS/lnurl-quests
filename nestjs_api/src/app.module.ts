@@ -35,6 +35,7 @@ import configuration from './config/configuration';
       }),
       inject: [ConfigService],
     }),
+
     LnurlModule,
     QuestModule,
   ],

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { WithdrawController } from './controllers/withdraw.controller';
+import { LnurlController } from './controllers/lnurl.controller';
 import { LnbitsLightningService } from './services/lnbits-lightning.service';
 import { QRService } from './services/qr.service';
 import { WithdrawRepository } from './repositories/withdraw.repository';
@@ -16,7 +16,7 @@ import { Withdraw, WithdrawSchema } from './schemas/withdraw.schema';
       { name: Withdraw.name, schema: WithdrawSchema },
     ]),
   ],
-  controllers: [WithdrawController],
+  controllers: [LnurlController],
   providers: [
     {
       provide: 'LightningService',
