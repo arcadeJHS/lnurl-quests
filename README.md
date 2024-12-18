@@ -60,7 +60,60 @@ curl 'http://localhost:3000/api/lnurl/generateWithdrawUrl?uuid=1234abc4bebebebeb
 ## Debugging (optional)
 If you are using Visual Studio Code, a debug ready launch configuration is provided.  
 Go to the "Run and Debug" tab and launch "Docker attach to NodeJS".  
-You can edit the launch config in ```.vscode/launch.json```.  
+You can edit the launch config in ```.vscode/launch.json```. 
+
+## Test case flow
+
+### Create a quest
+POST ```api/quest```  
+Insert the following json as the body payload:
+```javascript
+{
+  "title": "Quest1",
+  "description": "Players must guess at least 3 words. The first player to submit a correct answer wins 1000 sats.",
+  "rewardAmount": 1000,
+  "totalRewards": 1,
+  "startDate": "2024-12-18T00:00:00.000Z",
+  "endDate": "2024-12-25T00:00:00.000Z",
+  "claimedRewards": 0,
+  "active": true,
+  "conditions": {
+    "wordsToGuess": {
+      "words": ["quantum", "relativity", "neuroscience", "blockchain", "algorithm"],
+      "min": 3
+    }
+  }
+}
+``` 
+
+### Verify the quest has been inserted in the DB
+GET ```/api/quests/{id}```  
+To fill the ```{id}``` parameter, use the ```_id``` field returned in the previous step.  
+For instance, you should call something similar to:
+```
+http://localhost:3000/api/quests/676278b9847f7c325add7daf
+```
+If the quest exists, you should receive, as the response, the json of the entire document.
+
+### Validate the solution provided by a user
+POST ```/api/quests/validate```  
+Mock an answer (a "scenario"):
+```javascript
+{
+   // The words guessed by the player
+   wordsToGuess: ['quantum', 'blockchain', 'algorithm']
+}
+```  
+Then combine the quest ```_id``` in the previous steps with this scenario to create the body payload:
+```javascript
+{
+   "questId": "676278b9847f7c325add7daf",
+   "scenario": {
+      "wordsToGuess": ["quantum", "blockchain", "algorithm"]
+   }
+}
+```  
+This will return a boolean value: true if the scenario fullfills the quest. Otherwise false.
 
 ## TODO
 1. Currently operations which involve LNURL and payment management are handled by the  ```lnurl-node``` package (https://www.npmjs.com/package/lnurl) and ```LNBits API``` (https://lnbits.com/).  
@@ -70,6 +123,7 @@ You can edit the launch config in ```.vscode/launch.json```.
 3. Improve API error management and output documentation for Swagger.
 4. Improve tests (currently only the ```conditions-validator.ts``` is covered by tests).
 5. Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
+6. Add a Docker production ready configuration.
 
 ## References and Useful links
 Lightning decoder: https://lightningdecoder.com/

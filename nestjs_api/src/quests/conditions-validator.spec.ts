@@ -32,26 +32,24 @@ describe('ConditionsValidator', () => {
   });
 
   it('should validate word guesses successfully', () => {
-    const scenario = { words: ['quantum', 'blockchain', 'algorithm'] };
+    const scenario = { wordsToGuess: ['quantum', 'blockchain', 'algorithm'] };
     const conditions = {
-      words: {
-        wordsToGuess: {
-          words: [
-            'quantum',
-            'relativity',
-            'neuroscience',
-            'blockchain',
-            'algorithm',
-          ],
-          min: 3,
-        },
+      wordsToGuess: {
+        words: [
+          'quantum',
+          'relativity',
+          'neuroscience',
+          'blockchain',
+          'algorithm',
+        ],
+        min: 3,
       },
     };
     expect(validateConditions(scenario, conditions)).toBe(true);
   });
 
   it('should return false when not enough words are guessed', () => {
-    const scenario = { words: ['quantum', 'blockchain'] };
+    const scenario = { wordsToGuess: ['quantum', 'blockchain'] };
     const conditions = {
       words: {
         wordsToGuess: {
@@ -79,22 +77,20 @@ describe('ConditionsValidator', () => {
     const scenario = {
       wordToPost: '#bitcoin',
       postsCount: 5,
-      words: ['quantum', 'blockchain', 'algorithm'],
+      wordsToGuess: ['quantum', 'blockchain', 'algorithm'],
     };
     const conditions = {
       wordToPost: '#bitcoin',
       postsCount: { comparison: 'gte', value: 3 },
-      words: {
-        wordsToGuess: {
-          words: [
-            'quantum',
-            'relativity',
-            'neuroscience',
-            'blockchain',
-            'algorithm',
-          ],
-          min: 3,
-        },
+      wordsToGuess: {
+        words: [
+          'quantum',
+          'relativity',
+          'neuroscience',
+          'blockchain',
+          'algorithm',
+        ],
+        min: 3,
       },
     };
     expect(validateConditions(scenario, conditions)).toBe(true);

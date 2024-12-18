@@ -48,10 +48,10 @@ export class QuestDto {
   @IsNumber()
   claimedRewards?: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: true })
   @IsOptional()
   @IsBoolean()
-  active?: number;
+  active?: boolean;
 
   @ApiProperty()
   @IsNotEmpty()

@@ -43,7 +43,7 @@ const compareValues = (a: any, operator: string, b: any): boolean => {
       }
     },
     scenario: {
-      words: ['quantum', 'blockchain', 'algorithm']
+      wordsToGuess: ['quantum', 'blockchain', 'algorithm']
     }
   
     conditions:{
@@ -80,11 +80,11 @@ export const validateConditions = (
     // Condition is a complex object
     else if (typeof requiredValue === 'object' && requiredValue !== null) {
       // Guess the words condition
-      if ('wordsToGuess' in requiredValue) {
-        if (!Array.isArray(scenario.words)) {
+      if (key === 'wordsToGuess') {
+        if (!Array.isArray(scenario.wordsToGuess)) {
           return false;
         }
-        if (!validateWordGuess(scenario.words, requiredValue.wordsToGuess)) {
+        if (!validateWordGuess(scenario.wordsToGuess, requiredValue)) {
           return false;
         }
       }
