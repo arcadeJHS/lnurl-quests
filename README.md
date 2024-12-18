@@ -1,6 +1,6 @@
 # LNURL-Quests
 
-A core and basic implementation of a REST API able to automatically reward users for quest completion by paying through LNURL-withdraw.
+A core and basic implementation of a REST API able to automatically reward users for quest completion by paying through LNURL-withdraw.  
 The ```lnurl``` module implements a simple LNURL server.
 
 See: [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
@@ -54,7 +54,10 @@ http://localhost:3001/api
 
 You can also curl the API:
 ```bash
-curl 'http://localhost:3000/api/lnurl/generateWithdrawUrl?uuid=1234abc4bebebebeb' -H "X-Api-Key: <your-api-key>"
+curl -X 'GET' \
+  'http://localhost:3000/api/lnurl/generateWithdrawUrl?minAmount=100&maxAmount=500&defaultDescription=test' \
+  -H 'accept: */*' \
+  -H 'X-Api-Key: 123a123b123c123d'
 ``` 
 
 ## Debugging (optional)
