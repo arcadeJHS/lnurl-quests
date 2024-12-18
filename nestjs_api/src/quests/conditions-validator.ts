@@ -1,6 +1,3 @@
-import { Injectable } from '@nestjs/common';
-import { Quest } from './schemas/quest.schema';
-
 // TODO: improve implementation and types of the validation function
 // TODO: is it possible to implement a generic interface for validation in order to use different "validators"?
 
@@ -32,33 +29,33 @@ const compareValues = (a: any, operator: string, b: any): boolean => {
 };
 
 /**
-  This is a simple example function that validates if a user's scenario satisfy the quest conditions.
-  @param {Object} scenario - Dictionary of user's scenario to validate
-  @param {Object} conditions - Dictionary defining the quest conditions
-  @returns {boolean} Indicates if the conditions is satisfied
-  
-  Example conditions with a possible scenario:
-  
-  conditions: {
-    wordsToGuess: {
-      words: ['quantum', 'relativity', 'neuroscience', 'blockchain', 'algorithm'],
-      min: 3
+    This is a simple example function that validates if a user's scenario satisfy the quest conditions.
+    @param {Object} scenario - Dictionary of user's scenario to validate
+    @param {Object} conditions - Dictionary defining the quest conditions
+    @returns {boolean} Indicates if the conditions is satisfied
+    
+    Example conditions with a possible scenario:
+    
+    conditions: {
+      wordsToGuess: {
+        words: ['quantum', 'relativity', 'neuroscience', 'blockchain', 'algorithm'],
+        min: 3
+      }
+    },
+    scenario: {
+      words: ['quantum', 'blockchain', 'algorithm']
     }
-  },
-  scenario: {
-    words: ['quantum', 'blockchain', 'algorithm']
-  }
-
-  conditions:{
-    wordToPost: { comparison: 'eq', value: "#bitcoin" },
-    postsCount: { comparison: 'gte', value: 3 },
-  }
-  scenario: {
-    wordToPost: "#bitcoin",
-    postsCount: 3
-  }
- */
-const validateConditions = (
+  
+    conditions:{
+      wordToPost: { comparison: 'eq', value: "#bitcoin" },
+      postsCount: { comparison: 'gte', value: 3 },
+    }
+    scenario: {
+      wordToPost: "#bitcoin",
+      postsCount: 3
+    }
+   */
+export const validateConditions = (
   scenario: Record<string, any>,
   conditions: Record<string, any>,
 ): boolean => {
@@ -107,15 +104,3 @@ const validateConditions = (
   }
   return true;
 };
-
-@Injectable()
-export class QuestValidatorService {
-  constructor() {}
-
-  async validate(
-    quest: Quest,
-    scenario: Record<string, any>,
-  ): Promise<boolean> {
-    return validateConditions(scenario, quest.conditions);
-  }
-}

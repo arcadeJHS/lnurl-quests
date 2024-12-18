@@ -28,5 +28,6 @@ import { Withdraw, WithdrawSchema } from './schemas/withdraw.schema';
     AmountValidator,
     K1Validator,
   ],
+  exports: [LnbitsLightningService],
 })
 export class LnurlModule {}

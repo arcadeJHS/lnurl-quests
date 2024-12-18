@@ -3,14 +3,11 @@ import { QuestsRepository } from './repositories/quests.repository';
 import { Quest } from './schemas/quest.schema';
 import { QuestDto } from './dto/quest.dto';
 import { ValidateQuestDto } from './dto/validate-quest.dto';
-import { QuestValidatorService } from './quest-validator.service';
+import { validateConditions } from './conditions-validator';
 
 @Injectable()
 export class QuestsService {
-  constructor(
-    private repository: QuestsRepository,
-    private questValidatorService: QuestValidatorService,
-  ) {}
+  constructor(private repository: QuestsRepository) {}
 
   async create(questDto: QuestDto): Promise<Quest> {
     return await this.repository.create(questDto);
@@ -35,6 +32,6 @@ export class QuestsService {
   async validateQuest(validateQuestDto: ValidateQuestDto): Promise<boolean> {
     const quest = await this.findOne(validateQuestDto.questId);
     const scenario = validateQuestDto.scenario;
-    return this.questValidatorService.validate(quest, scenario);
+    return validateConditions(scenario, quest.conditions);
   }
 }

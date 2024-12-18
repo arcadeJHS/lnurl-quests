@@ -1,6 +1,7 @@
 # LNURL-Quests
 
 A core and basic implementation of a REST API able to automatically reward users for quest completion by paying through LNURL-withdraw.
+The ```lnurl``` module implements a simple LNURL server.
 
 See: [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
 
@@ -67,7 +68,7 @@ You can edit the launch config in ```.vscode/launch.json```.
    Probably it's possible to receive payments with the Breeze SDK (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html).
 2. Migrate from LNRL-whithdraw to Bolt12?
 3. Improve API error management and output documentation for Swagger.
-4. Add tests.
+4. Improve tests (currently only the ```conditions-validator.ts``` is covered by tests).
 5. Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
 
 ## References and Useful links

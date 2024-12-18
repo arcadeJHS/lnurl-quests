@@ -23,6 +23,12 @@ import { ClaimDto } from './dto/claim.dto';
 export class ClaimController {
   constructor(private readonly service: ClaimService) {}
 
+  @Post()
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async create(@Body() claimDto: ClaimDto) {
+    return await this.service.create(claimDto);
+  }
+
   @Get(':id')
   async find(@Param('id') id: string) {
     return await this.service.findOne(id);
@@ -36,7 +42,8 @@ export class ClaimController {
 
   @Post('reward')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async create(@Body() claimDto: ClaimDto) {
-    return await this.service.create(claimDto);
+  async generateLnurl(@Body() claimDto: ClaimDto) {
+    // TODO: Do not call create, but the service to generate a LNURL-whitdraw link
+    return await this.service.generateLnurl(claimDto);
   }
 }

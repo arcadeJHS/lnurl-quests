@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { QuestsService } from './quests.service';
-import { QuestValidatorService } from './quest-validator.service';
 import { QuestsController } from './quests.controller';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -12,7 +11,7 @@ import { QuestsRepository } from './repositories/quests.repository';
     ConfigModule,
     MongooseModule.forFeature([{ name: Quest.name, schema: QuestSchema }]),
   ],
-  providers: [QuestsService, QuestValidatorService, QuestsRepository],
+  providers: [QuestsService, QuestsRepository],
   controllers: [QuestsController],
 })
 export class QuestModule {}
