@@ -40,10 +40,10 @@ export class ClaimController {
     return await this.service.update(id, claimDto);
   }
 
-  @Post('reward')
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async generateLnurl(@Body() claimDto: ClaimDto) {
-    // TODO: Do not call create, but the service to generate a LNURL-whitdraw link
-    return await this.service.generateLnurl(claimDto);
-  }
+  // @Post('reward')
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // async generateLnurl(@Body() claimDto: ClaimDto) {
+  //   // TODO: Do not call create, but the service to generate a LNURL-whitdraw link
+  //   return await this.service.generateLnurl(claimDto);
+  // }
 }

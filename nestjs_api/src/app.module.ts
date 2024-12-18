@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
-import { LnurlModule } from './lnurl/lnurl.module';
-import { QuestModule } from './quests/quests.module';
-import { ClaimModule } from './claim/claim.module';
+// import { LnurlModule } from './lnurl/lnurl.module';
+// import { QuestModule } from './quests/quests.module';
+// import { ClaimModule } from './claim/claim.module';
+import { ApiModule } from './api/api.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -37,9 +38,10 @@ import configuration from './config/configuration';
       inject: [ConfigService],
     }),
 
-    LnurlModule,
-    QuestModule,
-    ClaimModule,
+    // LnurlModule,
+    // QuestModule,
+    // ClaimModule,
+    ApiModule,
   ],
 })
 export class AppModule {}

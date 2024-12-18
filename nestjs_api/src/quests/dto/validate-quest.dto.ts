@@ -13,9 +13,7 @@ export class ValidateQuestDto {
 
   @ApiProperty({
     example: {
-      scenario: {
-        wordsToGuess: ['quantum', 'blockchain', 'algorithm'],
-      },
+      wordsToGuess: ['quantum', 'blockchain', 'algorithm'],
     },
   })
   @IsNotEmpty()
