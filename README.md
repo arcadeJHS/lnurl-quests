@@ -102,10 +102,11 @@ GET     /api/lnurl/handleWithdrawCallback    - Handle withdraw callback and paym
 ```
 
 ### api
-This module interacts with the external world.  
-Moreover: exposes additional controllers/endpoints not directly implemented by other modules. The reason being controllers exposed by this module require cross-module access to different services.
+This module exposes additional endpoints not directly implemented by other modules.  
+The reason being thise endpoints require cross-module logic, and need to access services define elsewhere.
 ```
 POST    /api/quests/validate    - Handle all the logic required to verify, validate, and pay a claim (see the claim reward flow below)
+POST    /api/claim/reward       - Claim a payment
 ```
 
 ## Claim reward flow
