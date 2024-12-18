@@ -67,6 +67,10 @@ You can edit the launch config in ```.vscode/launch.json```.
 
 ## Test case flow
 
+Basically, a complete success flow is something like the one depicted in the picture:
+
+![sequence diagram][1]
+
 ### Create a quest
 POST ```api/quest```  
 Insert the following json as the body payload:
@@ -122,11 +126,12 @@ This will return a boolean value: true if the scenario fullfills the quest. Othe
 1. Currently operations which involve LNURL and payment management are handled by the  ```lnurl-node``` package (https://www.npmjs.com/package/lnurl) and ```LNBits API``` (https://lnbits.com/).  
    Is it possible to use something more robust/reliable like Greenlight or Breez SDK to handle LNURL operations?  
    Probably it's possible to receive payments with the Breeze SDK (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html).
-2. Migrate from LNRL-whithdraw to Bolt12?
-3. Improve API error management and output documentation for Swagger.
-4. Improve tests (currently only the ```conditions-validator.ts``` is covered by tests).
-5. Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
-6. Add a Docker production ready configuration.
+2. Refactor the lnurl module in order to make it pluggable and swappable, not relying on a single implementation. Every new implementation should adhere to a common interface. A plugin system? Libs inside a NestJS workspace? An external service required as a dependency in the API application? To be explored.
+3. Migrate from LNRL-whithdraw to Bolt12 (in the future...)?
+4. Improve API error management and output documentation for Swagger.
+5. Improve tests (currently only the ```conditions-validator.ts``` is covered by tests).
+6. Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
+7. Add a Docker production ready configuration.
 
 ## References and Useful links
 Lightning decoder: https://lightningdecoder.com/
@@ -145,3 +150,5 @@ He puts up for grabs a 50% refund of the paid registration fee if a candidate po
 At this point, at the end of the video, Bob will collect the names inserted in the comments and feed them to the system that will check: are at least 2 of the names present in the array of possible solutions?
 If yes, the system responds by generating an LNURL-withdraw.
 Bob will then send this "voucher" to the quest winner, who will be able to receive back, in sats, once enrolled in the course, 50% of the total cost.
+
+[1]: https://github.com/arcadeJHS/lnurl-quests/blob/main/assets/sequence_diagram_success.png

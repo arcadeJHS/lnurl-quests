@@ -3,9 +3,7 @@ import { IsNotEmpty, IsString, IsObject } from 'class-validator';
 
 export class ValidateQuestDto {
   @ApiProperty({
-    example: {
-      questId: '676278b9847f7c325add7daf',
-    },
+    example: '676278b9847f7c325add7daf',
   })
   @IsNotEmpty()
   @IsString()
