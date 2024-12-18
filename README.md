@@ -65,8 +65,43 @@ If you are using Visual Studio Code, a debug ready launch configuration is provi
 Go to the "Run and Debug" tab and launch "Docker attach to NodeJS".  
 You can edit the launch config in ```.vscode/launch.json```. 
 
-## Test case flow
+## Modules
 
+### quests
+This module manages quests life cycle.
+```
+GET    /api/quests          - List quests
+POST   /api/quests          - Create quest
+GET    /api/quests/:id      - Get quest details
+PUT    /api/quests/:id      - Update quest
+DELETE /api/quests/:id      - Delete quest
+```
+
+### claim
+This module manages claims life cycle.
+```
+POST   /api/claim           - Create a claim
+GET    /api/claim           - Get claim detail
+PUT    /api/claim/:id       - Update claim
+```
+
+### lnurl
+This module interfaces with the Lightning network.  
+It handles funds management, LNURL generation, payments.  
+```
+GET     /api/lnurl/generateWithdrawUrl       - Generate LNURL-withdraw
+GET     /api/lnurl/handleWithdrawRequest     - Send to client LNURL-withdraw params
+GET     /api/lnurl/handleWithdrawCallback    - Handle withdraw callback and payment
+```
+
+### api
+This module interacts with the external world.  
+Moreover: exposes additional controllers/endpoints not directly implemented by other modules. The reason being controllers exposed by this module require cross-module access to different services.
+```
+POST    /api/quests/validate    - Handle all the logic required to verify, validate, and pay a claim (see the claim reward flow below)
+```
+
+## Claim reward flow
 Basically, a complete success flow is something like the one depicted in the picture:
 
 ![sequence diagram][1]
@@ -92,6 +127,8 @@ Insert the following json as the body payload:
   }
 }
 ``` 
+
+## Testing a base case via API
 
 ### Verify the quest has been inserted in the DB
 GET ```/api/quests/{id}```  
@@ -126,12 +163,13 @@ This will return a boolean value: true if the scenario fullfills the quest. Othe
 1. Currently operations which involve LNURL and payment management are handled by the  ```lnurl-node``` package (https://www.npmjs.com/package/lnurl) and ```LNBits API``` (https://lnbits.com/).  
    Is it possible to use something more robust/reliable like Greenlight or Breez SDK to handle LNURL operations?  
    Probably it's possible to receive payments with the Breeze SDK (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html).
-2. Refactor the lnurl module in order to make it pluggable and swappable, not relying on a single implementation. Every new implementation should adhere to a common interface. A plugin system? Libs inside a NestJS workspace? An external service required as a dependency in the API application? To be explored.
-3. Migrate from LNRL-whithdraw to Bolt12 (in the future...)?
-4. Improve API error management and output documentation for Swagger.
-5. Improve tests (currently only the ```conditions-validator.ts``` is covered by tests).
-6. Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
-7. Add a Docker production ready configuration.
+2. Improve lightning funds management.
+3. Refactor the lnurl module in order to make it pluggable and swappable, not relying on a single implementation. Every new implementation should adhere to a common interface. A plugin system? Libs inside a NestJS workspace? An external service required as a dependency in the API application? To be explored.
+4. Migrate from LNRL-whithdraw to Bolt12 (in the future...)?
+5. Improve API error management and output documentation for Swagger.
+6. Improve tests (currently only the ```conditions-validator.ts``` is covered by tests).
+7. Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
+8. Add a Docker production ready configuration.
 
 ## References and Useful links
 Lightning decoder: https://lightningdecoder.com/
