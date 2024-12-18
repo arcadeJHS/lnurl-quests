@@ -8,6 +8,13 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+export interface HttpExceptionResponse {
+  statusCode: number;
+  message: string | object;
+  timestamp: string;
+  path: string;
+}
+
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(HttpExceptionFilter.name);
@@ -32,11 +39,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
       exception.stack,
     );
 
-    response.status(status).json({
+    const errorResponse: HttpExceptionResponse = {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
       message,
-    });
+    };
+
+    response.status(status).json(errorResponse);
   }
 }

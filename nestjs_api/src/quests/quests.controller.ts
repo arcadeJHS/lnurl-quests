@@ -52,9 +52,9 @@ export class QuestsController {
     return await this.service.delete(id);
   }
 
-  @Post('validate')
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async validate(@Body() validateQuestDto: ValidateQuestDto) {
-    return await this.service.validateQuest(validateQuestDto);
-  }
+  // @Post('validate')
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // async validate(@Body() validateQuestDto: ValidateQuestDto) {
+  //   return await this.service.validateQuest(validateQuestDto);
+  // }
 }

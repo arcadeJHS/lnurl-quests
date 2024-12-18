@@ -13,6 +13,7 @@ import { ClaimDto } from '../claim/dto/claim.dto';
 
 /**
  * Methods defined here require cross-module access to different services.
+ * Hence are implemented here, and not in the ClaimController directly.
  */
 @ApiTags('Claim')
 @ApiHeader({
@@ -21,7 +22,7 @@ import { ClaimDto } from '../claim/dto/claim.dto';
 })
 @Controller('claim')
 @UseGuards(ApiKeyGuard)
-export class VerificationController {
+export class ClaimRewardController {
   constructor(private readonly service: ClaimService) {}
 
   @Post('reward')

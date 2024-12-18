@@ -7,15 +7,17 @@ import { ClaimController } from '../claim/claim.controller';
 import { LnurlModule } from '../lnurl/lnurl.module';
 import { LnurlController } from '../lnurl/controllers/lnurl.controller';
 import { LnbitsLightningService } from '../lnurl/services/lnbits-lightning.service';
-import { RewardController } from './reward.controller';
+import { QuestValidateController } from './quest-validate.controller';
+import { ClaimRewardController } from './claim-reward.controller';
 
 @Module({
   imports: [ConfigModule, LnurlModule, QuestModule, ClaimModule],
   controllers: [
     QuestsController,
     ClaimController,
-    RewardController,
     LnurlController,
+    QuestValidateController,
+    ClaimRewardController,
   ],
   providers: [
     {
