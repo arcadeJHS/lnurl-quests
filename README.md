@@ -65,6 +65,12 @@ If you are using Visual Studio Code, a debug ready launch configuration is provi
 Go to the "Run and Debug" tab and launch "Docker attach to NodeJS".  
 You can edit the launch config in ```.vscode/launch.json```. 
 
+## Run automated tests
+```bash
+cd nestjs_api
+npm run test
+```
+
 ## Modules
 
 ### quests
@@ -89,7 +95,7 @@ PUT    /api/claim/:id       - Update claim
 This module interfaces with the Lightning network.  
 It handles funds management, LNURL generation, payments.  
 ```
-GET     /api/lnurl/generateWithdrawUrl       - Generate LNURL-withdraw (do not expose, internal only)
+<delw>GET     /api/lnurl/generateWithdrawUrl       - Generate LNURL-withdraw (do not expose, internal only)</delw>
 GET     /api/lnurl/handleWithdrawRequest     - Send to client LNURL-withdraw params
 GET     /api/lnurl/handleWithdrawCallback    - Handle withdraw callback and payment
 ```
@@ -160,16 +166,16 @@ Then combine the quest ```_id``` in the previous steps with this scenario to cre
 This will return a boolean value: true if the scenario fullfills the quest. Otherwise false.
 
 ## TODO
-1. Currently operations which involve LNURL and payment management are handled by the  ```lnurl-node``` package (https://www.npmjs.com/package/lnurl) and ```LNBits API``` (https://lnbits.com/).  
+- [] Currently operations which involve LNURL and payment management are handled by the  ```lnurl-node``` package (https://www.npmjs.com/package/lnurl) and ```LNBits API``` (https://lnbits.com/).  
    Is it possible to use something more robust/reliable like Greenlight or Breez SDK to handle LNURL operations?  
    Probably it's possible to receive payments with the Breeze SDK (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html).
-2. Improve lightning funds management.
-3. Refactor the lnurl module in order to make it pluggable and swappable, not relying on a single implementation. Every new implementation should adhere to a common interface. A plugin system? Libs inside a NestJS workspace? An external service required as a dependency in the API application? To be explored.
-4. Migrate from LNRL-whithdraw to Bolt12 (in the future...)?
-5. Improve API error management and output documentation for Swagger.
-6. Improve tests (currently only the ```conditions-validator.ts``` is covered by tests).
-7. Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
-8. Add a Docker production ready configuration.
+- [] Improve lightning funds management.
+- [] Refactor the lnurl module in order to make it pluggable and swappable, not relying on a single implementation. Every new implementation should adhere to a common interface. A plugin system? Libs inside a NestJS workspace? An external service required as a dependency in the API application? To be explored.
+- [] Migrate from LNRL-whithdraw to Bolt12 (in the future...)?
+- [] Improve API error management and output documentation for Swagger.
+- [] Improve tests (currently only the ```conditions-validator.ts``` is covered by tests).
+- [] Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
+- [] Add a Docker production ready configuration.
 
 ## References and Useful links
 Lightning decoder: https://lightningdecoder.com/
