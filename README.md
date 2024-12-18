@@ -1,7 +1,7 @@
 # LNURL-Quests
 
 A core and basic implementation of a REST API able to automatically reward users for quest completion by paying through LNURL-withdraw.  
-The ```lnurl``` module implements a simple LNURL server.
+The ```lnurl``` module implements a simple LNURL service.
 
 See: [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
 
@@ -76,11 +76,12 @@ npm run test
 ### quests
 This module manages quests life cycle.
 ```
-GET    /api/quests          - List quests
-POST   /api/quests          - Create quest
-GET    /api/quests/:id      - Get quest details
-PUT    /api/quests/:id      - Update quest
-DELETE /api/quests/:id      - Delete quest
+GET    /api/quests            - List quests
+POST   /api/quests            - Create quest
+GET    /api/quests/:id        - Get quest details
+PUT    /api/quests/:id        - Update quest
+DELETE /api/quests/:id        - Delete quest
+POST   /api/quests/validate   - Validate a solution
 ```
 
 ### claim
@@ -89,13 +90,14 @@ This module manages claims life cycle.
 POST   /api/claim           - Create a claim
 GET    /api/claim           - Get claim detail
 PUT    /api/claim/:id       - Update claim
+POST  /api/claim/reward     - Claim payment
 ```
 
 ### lnurl
 This module interfaces with the Lightning network.  
 It handles funds management, LNURL generation, payments.  
 ```
-<delw>GET     /api/lnurl/generateWithdrawUrl       - Generate LNURL-withdraw (do not expose, internal only)</delw>
+~~GET     /api/lnurl/generateWithdrawUrl     - Generate LNURL-withdraw (do not expose, internal only)~~
 GET     /api/lnurl/handleWithdrawRequest     - Send to client LNURL-withdraw params
 GET     /api/lnurl/handleWithdrawCallback    - Handle withdraw callback and payment
 ```
