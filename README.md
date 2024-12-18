@@ -102,7 +102,7 @@ POST    /api/quests/validate    - Handle all the logic required to verify, valid
 ```
 
 ## Claim reward flow
-Basically, a complete success flow is something like the one depicted in the picture:
+Basically, a complete and successful reward flow starts with the user asking to validate a solution, and ends with the user receiving the payment:
 
 ![sequence diagram][1]
 
