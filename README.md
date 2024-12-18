@@ -97,7 +97,6 @@ POST  /api/claim/reward     - Claim payment
 This module interfaces with the Lightning network.  
 It handles funds management, LNURL generation, payments.  
 ```
-~~GET     /api/lnurl/generateWithdrawUrl     - Generate LNURL-withdraw (do not expose, internal only)~~
 GET     /api/lnurl/handleWithdrawRequest     - Send to client LNURL-withdraw params
 GET     /api/lnurl/handleWithdrawCallback    - Handle withdraw callback and payment
 ```
