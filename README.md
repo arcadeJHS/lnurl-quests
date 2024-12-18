@@ -89,7 +89,7 @@ PUT    /api/claim/:id       - Update claim
 This module interfaces with the Lightning network.  
 It handles funds management, LNURL generation, payments.  
 ```
-GET     /api/lnurl/generateWithdrawUrl       - Generate LNURL-withdraw
+GET     /api/lnurl/generateWithdrawUrl       - Generate LNURL-withdraw (do not expose, internal only)
 GET     /api/lnurl/handleWithdrawRequest     - Send to client LNURL-withdraw params
 GET     /api/lnurl/handleWithdrawCallback    - Handle withdraw callback and payment
 ```
@@ -189,4 +189,4 @@ At this point, at the end of the video, Bob will collect the names inserted in t
 If yes, the system responds by generating an LNURL-withdraw.
 Bob will then send this "voucher" to the quest winner, who will be able to receive back, in sats, once enrolled in the course, 50% of the total cost.
 
-[1]: https://github.com/arcadeJHS/lnurl-quests/blob/main/assets/sequence_diagram_success.png
+[1]: https://github.com/arcadeJHS/lnurl-quests/blob/main/assets/sequence_diagram_success.jpg
