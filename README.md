@@ -209,8 +209,7 @@ This request update claim status to ```claimed```, and returns LNURL-withdraw da
 - Add a Docker production ready configuration.
 
 ## References and Useful links
-Lightning decoder: https://lightningdecoder.com/
-
+Lightning decoder: https://lightningdecoder.com/  
 LUD-03 spec: https://github.com/lnurl/luds/blob/luds/03.md
 
 ## Usecases
