@@ -32,7 +32,9 @@ MIN_WITHDRAW_AMOUNT=50
 ALLOWED_ORIGINS=http://localhost:3000,https://other-domain.com
 ```
 
-> Note: API reuests need to be authorized by a ```X-Api-Key``` in the header of the request.   > Use the param ```API_KEY``` in the .env file.
+> Note: API requests need to be authorized by a ```X-Api-Key``` in the header of the request.   
+> Use the param ```API_KEY``` in the .env file.
+> LNBITS_API_KEY: required only to complete the payment. Not necessary to generate a LNURL-whitdraw.
 
 Start the Docker containers:
 
@@ -114,10 +116,12 @@ Basically, a complete and successful reward flow starts with the user asking to 
 
 ![sequence diagram][1]
 
+## Testing a base case via API
+
 ### Create a quest
 POST ```api/quest```  
 Insert the following json as the body payload:
-```javascript
+```json
 {
   "title": "Quest1",
   "description": "Players must guess at least 3 words. The first player to submit a correct answer wins 1000 sats.",
@@ -136,10 +140,9 @@ Insert the following json as the body payload:
 }
 ``` 
 
-## Testing a base case via API
-
 ### Verify the quest has been inserted in the DB
-GET ```/api/quests/{id}```  
+```GET /api/quests/{id}```  
+
 To fill the ```{id}``` parameter, use the ```_id``` field returned in the previous step.  
 For instance, you should call something similar to:
 ```
@@ -148,24 +151,45 @@ http://localhost:3000/api/quests/676278b9847f7c325add7daf
 If the quest exists, you should receive, as the response, the json of the entire document.
 
 ### Validate the solution provided by a user
-POST ```/api/quests/validate```  
+```POST /api/quests/validate```  
+
 Mock an answer (a "scenario"):
-```javascript
+```json
 {
    // The words guessed by the player
    wordsToGuess: ['quantum', 'blockchain', 'algorithm']
 }
 ```  
+
 Then combine the quest ```_id``` in the previous steps with this scenario to create the body payload:
-```javascript
+```json
 {
    "questId": "676278b9847f7c325add7daf",
    "scenario": {
       "wordsToGuess": ["quantum", "blockchain", "algorithm"]
    }
 }
-```  
-This will return a boolean value: true if the scenario fullfills the quest. Otherwise false.
+``` 
+
+When you submit your guess to ```/api/quests/validate```, a new claim is created in the database, with ```status = pending```.
+
+If the scenario fulfills the quest, the claim status is updated to ```validated```, and you will receive the ```ID``` of the newly created claim as the response, for instance ```6764842c34c8683216206bf5```.  
+This will be used as the token to claim the reward.
+
+### Claim reward
+```GET /api/claim/reward?{token}```  
+
+Use the claim id returned in the previous step as the token, to call:  
+```/api/claim/reward?6764842c34c8683216206bf5``` 
+
+This request update claim status to ```claimed```, and returns LNURL-withdraw data to send to a LN wallet:
+```json
+{
+  "encoded": "lnurl1dp68gup69uhkcmmrv9kxsmmnwsarxvpsxqhksctwv3kx24mfw35xgunpwafx2ut4v4ehg0m3856nzenyxyunzctxxgmk2venv4snzefk8qmrvdfcxf3x2dphxvmnxe3nvf3xyvryvenxgd3evgensde4xfnrwe3hv93xzd34vymngdnxqwyrxa",
+  "secret": "51fd191af27e33ea1e6866582be47373f3bbb0dffd69b38752f7f7aba65a746f",
+  "url": "http://localhost:3000/handleWithdrawRequest?q=51fd191af27e33ea1e6866582be47373f3bbb0dffd69b38752f7f7aba65a746f"
+}
+```
 
 ## TODO
 - Currently operations which involve LNURL and payment management are handled by the  ```lnurl-node``` package (https://www.npmjs.com/package/lnurl) and ```LNBits API``` (https://lnbits.com/).  
