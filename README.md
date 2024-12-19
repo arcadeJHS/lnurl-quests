@@ -201,7 +201,7 @@ This request update claim status to ```claimed```, and returns LNURL-withdraw da
    Is it possible to use something more robust/reliable like Greenlight or Breez SDK to handle LNURL operations?  
    Probably it's possible to receive payments with the Breeze SDK (see: https://sdk-doc-greenlight.breez.technology/guide/lnurl_withdraw.html).
 - Improve lightning funds management.
-- Refactor the lnurl module in order to make it pluggable and swappable, not relying on a single implementation. Every new implementation should adhere to a common interface. A plugin system? Libs inside a NestJS workspace? An external service required as a dependency in the API application? To be explored.
+- Refactor the lnurl module in order to make it pluggable and swappable, not relying on a single implementation. Every new implementation should adhere to a common interface. A plugin system? Libs inside a NestJS workspace? An external service required as a dependency in the API application? Or maybe the LNURL-withdraw should be a pluggable dedicated second service, used by this API. To be explored.
 - Migrate from LNRL-whithdraw to Bolt12 (in the future...)?
 - Improve API error management and output documentation for Swagger.
 - Improve tests. Currently only a few "logic-heavy" files are covered.
