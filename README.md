@@ -175,7 +175,7 @@ This will return a boolean value: true if the scenario fullfills the quest. Othe
 - Refactor the lnurl module in order to make it pluggable and swappable, not relying on a single implementation. Every new implementation should adhere to a common interface. A plugin system? Libs inside a NestJS workspace? An external service required as a dependency in the API application? To be explored.
 - Migrate from LNRL-whithdraw to Bolt12 (in the future...)?
 - Improve API error management and output documentation for Swagger.
-- Improve tests (currently only the ```conditions-validator.ts``` is covered by tests).
+- Improve tests. Currently only a few "logic-heavy" files are covered.
 - Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
 - Add a Docker production ready configuration.
 
