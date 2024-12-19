@@ -12,3 +12,9 @@ export interface LightningPaymentResponse {
 }
 
 export interface LNBitsGenerateWithdrawUrlResponse extends LnurlData {}
+
+export interface GenerateWithdraw {
+  minWithdrawable: number;
+  maxWithdrawable: number;
+  defaultDescription: string;
+}

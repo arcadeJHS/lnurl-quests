@@ -1,21 +1,33 @@
-import { IsNumber, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  // IsNumber,
+  IsNotEmpty,
+  // IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
+// export class CreateWithdrawDto {
+//   @ApiProperty()
+//   @IsNumber()
+//   @IsNotEmpty()
+//   minAmount: number;
+
+//   @ApiProperty()
+//   @IsNumber()
+//   @IsNotEmpty()
+//   maxAmount: number;
+
+//   @ApiProperty({ required: false })
+//   @IsOptional()
+//   @IsString()
+//   defaultDescription?: string;
+// }
+
 export class CreateWithdrawDto {
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  minAmount: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  maxAmount: number;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
+  @ApiProperty({ required: true })
   @IsString()
-  defaultDescription?: string;
+  @IsNotEmpty()
+  token: string;
 }
 
 export class HandleWithdrawRequestDto {

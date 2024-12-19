@@ -10,7 +10,8 @@ import { LightningBackend } from 'lnurl';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { LNBitsGenerateWithdrawUrlResponse } from '../interfaces/withdraw.interface';
-import { WithdrawRepository } from '@lnurl/repositories/withdraw.repository';
+import { WithdrawRepository } from '../repositories/withdraw.repository';
+import { GenerateWithdraw } from '../interfaces/withdraw.interface';
 
 export class LNBitsBackend extends LightningBackend {
   private options: { apiKey: string; url: string };
@@ -115,17 +116,21 @@ export class LnbitsLightningService implements OnModuleInit {
         used: false,
       });
    */
-  async generateWithdrawUrl(params: {
-    minWithdrawable: number;
-    maxWithdrawable: number;
-    defaultDescription: string;
-  }): Promise<LNBitsGenerateWithdrawUrlResponse> {
+  async generateWithdrawUrl({
+    minWithdrawable,
+    maxWithdrawable,
+    defaultDescription,
+  }: GenerateWithdraw): Promise<LNBitsGenerateWithdrawUrlResponse> {
     // TODO: check validity of request, check funds...
 
     // TODO: maybe generate a QR code somewhere (not here)?
     // import { QRService } from './qr.service';
     // const qr = await this.qrService.generateQR(request.url);
-    const request = this.lnurlServer.generateNewUrl('withdrawRequest', params);
+    const request = this.lnurlServer.generateNewUrl('withdrawRequest', {
+      minWithdrawable,
+      maxWithdrawable,
+      defaultDescription,
+    });
     return request;
   }
 

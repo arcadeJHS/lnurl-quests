@@ -10,6 +10,7 @@ import { LnbitsLightningService } from '../lnurl/services/lnbits-lightning.servi
 import { QuestValidateController } from './quest-validate.controller';
 import { ClaimRewardController } from './claim-reward.controller';
 import { QuestValidationService } from './quest-validate.service';
+import { ClaimRewardService } from './claim-reward.service';
 
 @Module({
   imports: [ConfigModule, LnurlModule, QuestModule, ClaimModule],
@@ -26,6 +27,7 @@ import { QuestValidationService } from './quest-validate.service';
       useClass: LnbitsLightningService,
     },
     QuestValidationService,
+    ClaimRewardService,
   ],
 })
 export class ApiModule {}
