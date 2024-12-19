@@ -12,34 +12,14 @@ import {
   ApiTags,
   ApiBadRequestResponse,
   ApiCreatedResponse,
-  ApiProperty,
 } from '@nestjs/swagger';
 import { ApiKeyGuard } from '@common/guards/api-key.guard';
 import { ValidateQuestDto } from '@quests/dto/validate-quest.dto';
-import {
-  HttpExceptionFilter,
-  HttpExceptionResponse,
-} from '../common/filters/http-exception.filter';
+import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { QuestValidationService } from './quest-validate.service';
 import { QuestValidationError } from './interfaces/quest-validation-error.enum';
-
-class ValidationHttpExceptionResponse implements HttpExceptionResponse {
-  @ApiProperty({ example: 400 })
-  statusCode: number;
-
-  @ApiProperty({
-    description: 'Error message',
-    enum: QuestValidationError,
-    example: QuestValidationError.QUEST_IS_NOT_ACTIVE,
-  })
-  message: string;
-
-  @ApiProperty({ example: '2024-12-18T10:32:28.000Z' })
-  timestamp: string;
-
-  @ApiProperty({ example: '/quests/validate' })
-  path: string;
-}
+import { ValidationHttpExceptionResponse } from '../common/filters/validation-http-exception-response';
+import { Throttle } from '@nestjs/throttler';
 
 /**
  * Methods defined here require cross-module access to different services.
@@ -59,6 +39,7 @@ export class QuestValidateController {
   ) {}
 
   @Post('validate')
+  @Throttle({ default: { limit: 10, ttl: 60 } })
   @UsePipes(new ValidationPipe({ transform: true }))
   @ApiCreatedResponse({
     description: 'Quest validation successful',
@@ -66,7 +47,7 @@ export class QuestValidateController {
   })
   @ApiBadRequestResponse({
     description: 'Bad Request',
-    type: ValidationHttpExceptionResponse,
+    type: ValidationHttpExceptionResponse<QuestValidationError>,
   })
   async validate(@Body() validateQuestDto: ValidateQuestDto): Promise<string> {
     return this.questValidationService.validateQuest(validateQuestDto);

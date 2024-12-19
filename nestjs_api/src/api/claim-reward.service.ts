@@ -1,11 +1,17 @@
-import { Query, Inject } from '@nestjs/common';
+import {
+  Query,
+  Inject,
+  Injectable,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 // import { AmountValidator } from '../lnurl/validators/amount.validator';
 import { CreateWithdrawDto } from '../lnurl/dto/withdraw.dto';
-import { Injectable } from '@nestjs/common';
 import { LnbitsLightningService } from '../lnurl/services/lnbits-lightning.service';
 import { LNBitsGenerateWithdrawUrlResponse } from '../lnurl/interfaces/withdraw.interface';
 import { ClaimService } from '../claim/claim.service';
 import { QuestsService } from '../quests/quests.service';
+import { ClaimRewardError } from './interfaces/claim-reward-error.enum';
 
 @Injectable()
 export class ClaimRewardService {
@@ -45,18 +51,45 @@ export class ClaimRewardService {
      * TODO: add the withdraw request params to DB, using the param "lnurl.secret" as UUID to identify it in subsequent operations
      * TODO: params to add to withdraws DB: secret (as ID), minWithdrawable, maxWithdrawable, defaultDescription
      */
-    const claimId = createWithdrawDto.token;
-    // get claim document from DB by claimId
-    const claim = await this.claimService.findOne(claimId);
-    // get quest document from DB by claim.questId
-    const quest = await this.questService.findOne(claim.questId);
+    try {
+      const claimId = createWithdrawDto.token;
 
-    const lnurl = await this.lightningService.generateWithdrawUrl({
-      minWithdrawable: quest.rewardAmount,
-      maxWithdrawable: quest.rewardAmount,
-      defaultDescription: `Reward for ${quest.title}`,
-    });
+      if (!claimId) {
+        throw new HttpException(
+          ClaimRewardError.INVALID_TOKEN,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
 
-    return lnurl;
+      // get claim document by claimId
+      const claim = await this.claimService.findOne(claimId);
+
+      if (!claim) {
+        throw new HttpException(
+          ClaimRewardError.INVALID_CLAIM,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // get quest document by claim.questId
+      const quest = await this.questService.findOne(claim.questId);
+
+      if (!quest) {
+        throw new HttpException(
+          ClaimRewardError.INVALID_QUEST,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const lnurl = await this.lightningService.generateWithdrawUrl({
+        minWithdrawable: quest.rewardAmount,
+        maxWithdrawable: quest.rewardAmount,
+        defaultDescription: `Reward for ${quest.title}`,
+      });
+
+      return lnurl;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
