@@ -81,16 +81,16 @@ POST   /api/quests            - Create quest
 GET    /api/quests/:id        - Get quest details
 PUT    /api/quests/:id        - Update quest
 DELETE /api/quests/:id        - Delete quest
-POST   /api/quests/validate   - Validate a solution
+POST   /api/quests/validate   - Validate the solution to a quest
 ```
 
 ### claim
 This module manages claims life cycle.
 ```
-POST   /api/claim           - Create a claim
-GET    /api/claim           - Get claim detail
-PUT    /api/claim/:id       - Update claim
-POST  /api/claim/reward     - Claim payment
+POST  /api/claim          - Create a claim
+GET   /api/claim          - Get claim detail
+PUT   /api/claim/:id      - Update claim
+POST  /api/claim/reward   - Claim payment and generate the LNURL-whitdraw
 ```
 
 ### lnurl

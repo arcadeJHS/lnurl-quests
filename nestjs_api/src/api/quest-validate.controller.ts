@@ -24,9 +24,8 @@ import {
   HttpExceptionResponse,
 } from '../common/filters/http-exception.filter';
 import { ClaimService } from '../claim/claim.service';
-import { ClaimDto } from '../claim/dto/claim.dto';
+import { ClaimDocument } from '../claim/dto/claim.dto';
 import { ClaimStatus } from '../claim/interfaces/claim-status.enum';
-import { Document } from 'mongoose';
 
 enum QuestValidationError {
   QUEST_IS_NOT_ACTIVE = 'Quest is not active',
@@ -90,7 +89,6 @@ export class QuestValidateController {
      * 3. Validate the quest scenario.
      * 4. Return true if the scenario is correct, false otherwise.
      */
-
     const questId = validateQuestDto.questId;
     const quest = await this.questService.findOne(questId);
 
@@ -120,7 +118,7 @@ export class QuestValidateController {
     const claim = (await this.claimService.create({
       questId: questId,
       status: ClaimStatus.PENDING,
-    })) as Document & ClaimDto;
+    })) as ClaimDocument;
 
     // Validate the quest scenario
     const solutionIsValid =

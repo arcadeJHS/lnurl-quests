@@ -12,6 +12,7 @@ import {
 import { ClaimStatus } from '../interfaces/claim-status.enum';
 import { LnurlData } from '../../common/interfaces/lnurl-data.interface';
 import { LnurlDataDto } from './lnurl-data.dto';
+import { Document } from 'mongoose';
 
 export class ClaimDto {
   @ApiProperty()
@@ -46,3 +47,5 @@ export class ClaimDto {
   @Type(() => Date)
   claimedAt?: Date;
 }
+
+export type ClaimDocument = ClaimDto & Document;
