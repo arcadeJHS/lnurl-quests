@@ -8,7 +8,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import {
-  CreateWithdrawDto,
+  // CreateWithdrawDto,
   WithdrawCallbackDto,
   HandleWithdrawRequestDto,
 } from '../dto/withdraw.dto';
@@ -33,32 +33,32 @@ export class LnurlController {
     private lightningService: LightningBackend,
   ) {}
 
-  @Get('generateWithdrawUrl')
-  @Throttle({ default: { limit: 10, ttl: 60 } })
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async generateWithdrawUrl(@Query() createWithdrawDto: CreateWithdrawDto) {
-    this.amountValidator.validate(
-      createWithdrawDto.minAmount,
-      createWithdrawDto.maxAmount,
-    );
+  // @Get('generateWithdrawUrl')
+  // @Throttle({ default: { limit: 10, ttl: 60 } })
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // async generateWithdrawUrl(@Query() createWithdrawDto: CreateWithdrawDto) {
+  //   this.amountValidator.validate(
+  //     createWithdrawDto.minAmount,
+  //     createWithdrawDto.maxAmount,
+  //   );
 
-    /**
-     * This method generates a withdraw URL similar to:
-     * "http://localhost:3000/generateWithdrawParams?q=fde2c82bdc78ff7eda48de478a9412d785fa988cc1f16c8e89c0a82af138168b"
-     *
-     * Here, the "q" param is the "lnurl.secret" that will be used to uniquely identify the withdraw in subsequent operations.
-     * TODO: add the withdraw request params to DB, using the param "lnurl.secret" as UUID to identify it in subsequent operations
-     * TODO: params to add to DB: secret (as ID), minWithdrawable, maxWithdrawable, defaultDescription
-     */
-    const lnurl = await this.lightningService.generateWithdrawUrl({
-      minWithdrawable: createWithdrawDto.minAmount,
-      maxWithdrawable: createWithdrawDto.maxAmount,
-      defaultDescription:
-        createWithdrawDto.defaultDescription || 'LNURL Withdrawal test',
-    });
+  //   /**
+  //    * This method generates a withdraw URL similar to:
+  //    * "http://localhost:3000/generateWithdrawParams?q=fde2c82bdc78ff7eda48de478a9412d785fa988cc1f16c8e89c0a82af138168b"
+  //    *
+  //    * Here, the "q" param is the "lnurl.secret" that will be used to uniquely identify the withdraw in subsequent operations.
+  //    * TODO: add the withdraw request params to DB, using the param "lnurl.secret" as UUID to identify it in subsequent operations
+  //    * TODO: params to add to DB: secret (as ID), minWithdrawable, maxWithdrawable, defaultDescription
+  //    */
+  //   const lnurl = await this.lightningService.generateWithdrawUrl({
+  //     minWithdrawable: createWithdrawDto.minAmount,
+  //     maxWithdrawable: createWithdrawDto.maxAmount,
+  //     defaultDescription:
+  //       createWithdrawDto.defaultDescription || 'LNURL Withdrawal test',
+  //   });
 
-    return lnurl;
-  }
+  //   return lnurl;
+  // }
 
   @Get('handleWithdrawRequest')
   @Throttle({ default: { limit: 10, ttl: 60 } })

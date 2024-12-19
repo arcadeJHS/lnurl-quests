@@ -14,10 +14,10 @@ import { ClaimRewardController } from './claim-reward.controller';
   imports: [ConfigModule, LnurlModule, QuestModule, ClaimModule],
   controllers: [
     QuestsController,
+    ClaimRewardController,
     ClaimController,
     LnurlController,
     QuestValidateController,
-    ClaimRewardController,
   ],
   providers: [
     {
