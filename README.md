@@ -74,6 +74,10 @@ npm run test
 ```
 
 ## Modules
+Go tot Swagger for the complete API documentation:
+``` 
+http://localhost:3001/api
+``` 
 
 ### quests
 This module manages quests life cycle.
@@ -83,7 +87,6 @@ POST   /api/quests            - Create quest
 GET    /api/quests/:id        - Get quest details
 PUT    /api/quests/:id        - Update quest
 DELETE /api/quests/:id        - Delete quest
-POST   /api/quests/validate   - Validate the solution to a quest
 ```
 
 ### claim
@@ -92,23 +95,22 @@ This module manages claims life cycle.
 POST  /api/claim          - Create a claim
 GET   /api/claim          - Get claim detail
 PUT   /api/claim/:id      - Update claim
-POST  /api/claim/reward   - Claim payment and generate the LNURL-whitdraw
 ```
 
 ### lnurl
 This module interfaces with the Lightning network.  
 It handles funds management, LNURL generation, payments.  
 ```
-GET     /api/lnurl/handleWithdrawRequest     - Send to client LNURL-withdraw params
-GET     /api/lnurl/handleWithdrawCallback    - Handle withdraw callback and payment
+GET  /api/lnurl/handleWithdrawRequest     - Send to client LNURL-withdraw params
+GET  /api/lnurl/handleWithdrawCallback    - Handle withdraw callback and payment
 ```
 
 ### api
 This module exposes additional endpoints not directly implemented by other modules.  
 The reason being thise endpoints require cross-module logic, and need to access services define elsewhere.
 ```
-POST    /api/quests/validate    - Handle all the logic required to verify, validate, and pay a claim (see the claim reward flow below)
-POST    /api/claim/reward       - Claim a payment
+POST   /api/quests/validate    - Handle all the logic required to verify, validate, and pay a claim (see the claim reward flow below)
+GET    /api/claim/reward       - Claim a payment
 ```
 
 ## Claim reward flow
@@ -120,6 +122,7 @@ Basically, a complete and successful reward flow starts with the user asking to 
 
 ### Create a quest
 POST ```api/quest```  
+
 Insert the following json as the body payload:
 ```json
 {
@@ -140,6 +143,8 @@ Insert the following json as the body payload:
 }
 ``` 
 
+This will return the document created, with its ```_id```.
+
 ### Verify the quest has been inserted in the DB
 ```GET /api/quests/{id}```  
 
@@ -153,11 +158,11 @@ If the quest exists, you should receive, as the response, the json of the entire
 ### Validate the solution provided by a user
 ```POST /api/quests/validate```  
 
-Mock an answer (a "scenario"):
+Mock an answer (a "scenario").  
+```wordsToGuess``` is an array of words gueessed by the player:
 ```json
 {
-   // The words guessed by the player
-   wordsToGuess: ['quantum', 'blockchain', 'algorithm']
+  "wordsToGuess": ["quantum", "blockchain", "algorithm"]
 }
 ```  
 
