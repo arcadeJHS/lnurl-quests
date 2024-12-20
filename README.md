@@ -49,8 +49,9 @@ MONGO_APP_PASSWORD=lnurl_password
 MONGODB_URI=mongodb://lnurl_user:lnurl_password@localhost:27017/lnurl-quests
 ``` 
 
+You can also refine application config params in ```src/config/configuration.ts```.
 
-Start the Docker containers:
+Now start the Docker containers:
 
 ```bash
 docker compose -f docker-compose.dev.yml up --build
@@ -68,7 +69,7 @@ Navigate to the API docs here (Swagger):
 http://localhost:3001/api
 ``` 
 
-You can also curl the API:
+Now you can interact with the API via the Swagger UI, or you can curl it:
 ```bash
 curl -X 'GET' \
   'http://localhost:3000/api/lnurl/generateWithdrawUrl?minAmount=100&maxAmount=500&defaultDescription=test' \
@@ -206,7 +207,7 @@ This request update claim status to ```claimed```, and returns LNURL-withdraw da
 {
   "encoded": "lnurl1dp68gup69uhkcmmrv9kxsmmnwsarxvpsxqhksctwv3kx24mfw35xgunpwafx2ut4v4ehg0m3856nzenyxyunzctxxgmk2venv4snzefk8qmrvdfcxf3x2dphxvmnxe3nvf3xyvryvenxgd3evgensde4xfnrwe3hv93xzd34vymngdnxqwyrxa",
   "secret": "51fd191af27e33ea1e6866582be47373f3bbb0dffd69b38752f7f7aba65a746f",
-  "url": "http://localhost:3000/handleWithdrawRequest?q=51fd191af27e33ea1e6866582be47373f3bbb0dffd69b38752f7f7aba65a746f"
+  "url": "http://localhost:3000/api/lnurl/handleWithdrawRequest?q=51fd191af27e33ea1e6866582be47373f3bbb0dffd69b38752f7f7aba65a746f"
 }
 ```
 

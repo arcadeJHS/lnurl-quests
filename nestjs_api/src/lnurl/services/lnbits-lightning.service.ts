@@ -9,9 +9,12 @@ import * as lnurl from 'lnurl';
 import { LightningBackend } from 'lnurl';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { LNBitsGenerateWithdrawUrlResponse } from '../interfaces/withdraw.interface';
+import {
+  LNBitsLnurlData,
+  WithdrawParamsResponse,
+  GenerateWithdraw,
+} from '../interfaces/withdraw.interface';
 import { WithdrawRepository } from '../repositories/withdraw.repository';
-import { GenerateWithdraw } from '../interfaces/withdraw.interface';
 
 export class LNBitsBackend extends LightningBackend {
   private options: { apiKey: string; url: string };
@@ -33,7 +36,7 @@ export class LNBitsBackend extends LightningBackend {
         { out: true, bolt11: invoice },
         { headers: { 'X-Api-Key': this.options.apiKey } },
       );
-      return response.data.payment_hash;
+      return response.data;
     } catch (error) {
       throw new Error('Failed to pay invoice');
     }
@@ -87,7 +90,7 @@ export class LnbitsLightningService implements OnModuleInit {
       host: this.configService.get('app.host'),
       port: this.configService.get('app.port'),
       listen: false,
-      endpoint: '/handleWithdrawRequest',
+      endpoint: `/${this.configService.get('lightning.withdrawParamsUrl')}`,
       lightning: new LNBitsBackend({
         apiKey: this.configService.get('lightning.apiKey'),
         url: this.configService.get('lightning.lnbitsUrl'),
@@ -95,76 +98,87 @@ export class LnbitsLightningService implements OnModuleInit {
     });
   }
 
-  // TODO: add DB management for the following methods
+  async isValidK1(k1: string): Promise<boolean> {
+    return await !!this.withdrawRepository.findUnusedByK1(k1);
+  }
 
   // 1) Generate withdraw url
   /**
-   * This method generates a withdraw URL similar to:
-   * "http://localhost:3000/generateWithdrawParams?q=fde2c82bdc78ff7eda48de478a9412d785fa988cc1f16c8e89c0a82af138168b"
+   * This method generates a withdraw URL similar to (see the configuration.ts file: lightning.withdrawParamsUrl):
+   * "http://localhost:3000/api/lnurl/handleWithdrawRequest?q=fde2c82bdc78ff7eda48de478a9412d785fa988cc1f16c8e89c0a82af138168b"
    *
-   * Here, the "q" param is the "lnurl.secret" that will be used to uniquely identify the withdraw in subsequent operations.
-   * TODO: add the withdraw request params to DB, using the param "lnurl.secret" as UUID to identify it in subsequent operations
-   * TODO: params to add to DB: secret (as ID), minWithdrawable, maxWithdrawable, defaultDescription
-   * 
-   * For instance (to save in DB):
-      const withdraw = await this.withdrawRepository.create({
-        k1,
+   * Here, the "q" param is the "secret" that will be used to uniquely identify the withdraw in subsequent operations.
+   * After generating lnurlData, we create and save the withdraw in the DB with the following params:
+   *  {
+        k1, // aka "secret"
         minWithdrawable: minAmount,
         maxWithdrawable: maxAmount,
-        defaultDescription: description || 'LNURL Withdrawal',
-        used: false,
-      });
+        defaultDescription: description || 'LNURL Withdrawal'
+      }
    */
   async generateWithdrawUrl({
     minWithdrawable,
     maxWithdrawable,
     defaultDescription,
-  }: GenerateWithdraw): Promise<LNBitsGenerateWithdrawUrlResponse> {
-    // TODO: check validity of request, check funds...
-
-    // TODO: maybe generate a QR code somewhere (not here)?
+  }: GenerateWithdraw): Promise<LNBitsLnurlData> {
+    // TODO: add exceptions handling
+    // TODO: check validity of request, check funds (is it better to check in this initial phase or later?)...
+    // TODO: maybe generate a QR code somewhere (not here)? Anyway this is a more UI related concern.
     // import { QRService } from './qr.service';
     // const qr = await this.qrService.generateQR(request.url);
-    const request = this.lnurlServer.generateNewUrl('withdrawRequest', {
-      minWithdrawable,
+    const description = defaultDescription || 'LNURL Withdrawal';
+    const params = {
       maxWithdrawable,
-      defaultDescription,
+      minWithdrawable,
+      defaultDescription: description,
+    };
+
+    const lnurlData = await this.lnurlServer.generateNewUrl(
+      'withdrawRequest',
+      params,
+    );
+
+    // Create a new withdraw in the DB
+    await this.withdrawRepository.create({
+      k1: lnurlData.secret, // aka "secret"
+      ...params,
     });
-    return request;
+
+    return lnurlData;
   }
 
-  // 2) The user's wallet follow the url generate at step 1 and calls this method to get withdraw params
-  async handleWithdrawRequest(params) {
-    // Note: k1 is the "secret" param generated in the previous "this.lnurlServer.generateWithdrawUrl" step.
-    const { q } = params;
-    const k1 = q;
+  // 2) The user's wallet follow the url generated in step 1, and calls this method to get withdraw params
+  async handleWithdrawRequest({
+    q,
+  }: {
+    q: string;
+  }): Promise<WithdrawParamsResponse> {
+    // TODO: add exceptions handling
+    // This method is called with a "q" query param, which is the "secret" param generated in the previous "this.lnurlServer.generateWithdrawUrl" step.
+    // We use this "secret" to fetch the withdraw from the DB, and to set "k1" in the withdraw response.
+    const withdraw = await this.withdrawRepository.findUnusedByK1(q);
 
-    // TODO: the other required params, minWithdrawable, maxWithdrawable, defaultDescription, should be fetched from the DB using the "k1" param.
-    const { minWithdrawable, maxWithdrawable, defaultDescription } = {
-      minWithdrawable: 1000,
-      maxWithdrawable: 100000,
-      defaultDescription: 'LNURL Withdrawal',
-    }; // mocked values. Get them from DB.
-
-    return {
+    const withdrawParams: WithdrawParamsResponse = {
       tag: 'withdrawRequest',
+      k1: q,
       // Note: when the wallet calls this callback url
-      // it will automatically append also the "pr" param as a query param.
-      // TODO: verify this is really the case (are we getting the "pr" param when the wallet calls the callback?)
-      callback: `${this.configService.get('app.baseUrl')}/api/lnurl/handleWithdrawCallback?k1=${k1}`,
-      k1: k1,
-      minWithdrawable: minWithdrawable,
-      maxWithdrawable: maxWithdrawable,
-      defaultDescription: defaultDescription,
+      // it will automatically append also the "pr" param as a query param. So "pr" will be available in the callback method "handleWithdrawCallback".
+      // TODO: verify the flow really works like this (are we getting the "pr" param when the wallet calls the callback?)
+      callback: `${this.configService.get('app.baseUrl')}/${this.configService.get('lightning.withdrawCallbackUrl')}?k1=${q}`,
+      maxWithdrawable: withdraw.maxWithdrawable,
+      minWithdrawable: withdraw.minWithdrawable,
+      defaultDescription: withdraw.defaultDescription,
     };
+
+    return withdrawParams;
   }
 
   // 3) Callback handling
   /**
    * As noted in the previous step (handleWithdrawRequest):
-   * when the wallet calls the callback url, it will automatically append also the "pr" param as a query param.
+   * when the wallet calls the callback url, it will automatically append also the "pr" param as a query param (it should, at least!).
    
-    The flow for obtaining the "pr" parameter is as follows:
+    The flow for obtaining the "pr" parameter is quite complex and, in some way, counterintuitive:
       - The server generates a withdraw URL using server.generateNewUrl('withdrawRequest').
       - The user's wallet accesses this URL and receives a JSON response (by the handleWithdrawRequest method) containing withdrawal parameters.
       - The wallet should now generate a bolt11 invoice, and send a GET request to the callback URL, including the "pr" as a query parameter.
@@ -173,31 +187,20 @@ export class LnbitsLightningService implements OnModuleInit {
       - The server receives this request, and extracts the "pr" parameter in the handleWithdrawCallback method. 
    */
   async handleWithdrawCallback(k1: string, pr: string) {
-    // TODO: check DB for validity
-    // For instance:
-    // const withdraw = await this.withdrawRepository.findUnusedByK1(k1);
-    // if (!withdraw) {
-    //   throw new Error('Invalid or already used withdrawal');
-    // }
+    // Check if the withdraw is (still) valid
+    const withdraw = await this.withdrawRepository.findUnusedByK1(k1);
 
     // "pr" is the bolt11 invoice generated by the wallet
     try {
       const paymentHash = await this.lnurlServer.lightning.payInvoice(pr);
 
-      // TODO: if everything OK, update the DB:
-      // await this.withdrawRepository.markAsUsed(
-      //   withdraw._id,
-      //   payment.payment_hash || '',
-      // );
+      // If everything OK, on the DB update the withdraw as used and paid
+      await this.withdrawRepository.markAsUsed(withdraw._id, paymentHash);
 
       return { status: 'OK', paymentHash };
     } catch (error) {
       console.error('Error paying invoice:', error);
       return { status: 'ERROR', reason: 'Payment failed' };
     }
-  }
-
-  async isValidK1(k1: string): Promise<boolean> {
-    return await !!this.withdrawRepository.findUnusedByK1(k1);
   }
 }

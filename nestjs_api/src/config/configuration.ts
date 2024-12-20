@@ -22,5 +22,7 @@ export default () => ({
       10,
     ),
     minWithdrawAmount: parseInt(process.env.MIN_WITHDRAW_AMOUNT || '1000', 10),
+    withdrawParamsUrl: 'api/lnurl/handleWithdrawRequest',
+    withdrawCallbackUrl: 'api/lnurl/handleWithdrawCallback',
   },
 });

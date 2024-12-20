@@ -12,7 +12,7 @@ import { ApiKeyGuard } from '@common/guards/api-key.guard';
 import { Throttle } from '@nestjs/throttler';
 import { CreateWithdrawDto } from '../lnurl/dto/withdraw.dto';
 import { ClaimRewardService } from './claim-reward.service';
-import { LNBitsGenerateWithdrawUrlResponse } from '../lnurl/interfaces/withdraw.interface';
+import { LNBitsLnurlData } from '../lnurl/interfaces/withdraw.interface';
 import { HttpExceptionFilter } from '@common/filters/http-exception.filter';
 import { ClaimRewardError } from './interfaces/claim-reward-error.enum';
 import { ValidationHttpExceptionResponse } from '../common/filters/validation-http-exception-response';
@@ -41,7 +41,7 @@ export class ClaimRewardController {
   })
   async generateWithdrawUrl(
     @Query() createWithdrawDto: CreateWithdrawDto,
-  ): Promise<LNBitsGenerateWithdrawUrlResponse> {
+  ): Promise<LNBitsLnurlData> {
     return await this.claimRewardService.generateWithdrawUrl(createWithdrawDto);
   }
 }

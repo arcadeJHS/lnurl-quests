@@ -8,7 +8,7 @@ import {
 // import { AmountValidator } from '../lnurl/validators/amount.validator';
 import { CreateWithdrawDto } from '../lnurl/dto/withdraw.dto';
 import { LnbitsLightningService } from '../lnurl/services/lnbits-lightning.service';
-import { LNBitsGenerateWithdrawUrlResponse } from '../lnurl/interfaces/withdraw.interface';
+import { LNBitsLnurlData } from '../lnurl/interfaces/withdraw.interface';
 import { ClaimService } from '../claim/claim.service';
 import { QuestsService } from '../quests/quests.service';
 import { ClaimRewardError } from './interfaces/claim-reward-error.enum';
@@ -23,9 +23,38 @@ export class ClaimRewardService {
     private readonly questService: QuestsService,
   ) {}
 
+  /*
+  TODO: move HttpException handling outside the service, to the controller!!!
+
+  Implement a custom exception:
+  export class ValidationException extends Error {
+    constructor(message: string) {
+      super(message);
+      this.name = 'CustomException';
+    }
+  }
+
+  Then in the service:
+  import { ValidationException } from './custom-exception';
+
+  if (!claimId) {
+    throw new ValidationException(ClaimRewardError.INVALID_TOKEN);
+  }
+
+  Then in the controller:
+  try {
+    await this.claimRewardService.generateWithdrawUrl(dto);
+  } catch (error) {
+    if (error instanceof ValidationException) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+    throw error;
+  }
+   
+   */
   async generateWithdrawUrl(
     @Query() createWithdrawDto: CreateWithdrawDto,
-  ): Promise<LNBitsGenerateWithdrawUrlResponse> {
+  ): Promise<LNBitsLnurlData> {
     // TODO: move this validation to the quest creation logic
     // this.amountValidator.validate(
     //   createWithdrawDto.minAmount,

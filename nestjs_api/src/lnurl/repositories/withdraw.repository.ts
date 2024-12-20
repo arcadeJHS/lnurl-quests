@@ -14,12 +14,19 @@ export class WithdrawRepository {
     return withdraw.save();
   }
 
-  async findUnusedByK1(k1: string): Promise<Withdraw | null> {
-    return this.withdrawModel.findOne({ k1, used: false });
+  async update(id: string, withdraw: Partial<Withdraw>): Promise<Withdraw> {
+    return await this.withdrawModel.findByIdAndUpdate(id, withdraw).exec();
   }
 
-  async markAsUsed(id: string, paymentHash: string): Promise<void> {
-    await this.withdrawModel.findByIdAndUpdate(id, {
+  async findUnusedByK1(k1: string): Promise<Withdraw | null> {
+    return this.withdrawModel.findOne({
+      k1,
+      $or: [{ used: false }, { used: true, paymentHash: null }],
+    });
+  }
+
+  async markAsUsed(id: string, paymentHash: string): Promise<Withdraw> {
+    return await this.withdrawModel.findByIdAndUpdate(id, {
       used: true,
       usedAt: new Date(),
       paymentHash,
