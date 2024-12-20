@@ -14,7 +14,7 @@ With LNURL-withdraw, the process is:
 1. A service (the API implemented in this repo) provides a short LNURL (or its QR code version).
 2. A LNURL enabled wallet scans/opens it, decodes it, and use it to make a GET request to the service.
 3. The response is a JSON containing al the params required to generate and ask for a payment:
-    ```json
+    ```
     {
         "tag": "withdrawRequest", // type of LNURL
         "callback": "string", // The URL which LN SERVICE would accept a withdrawal Lightning invoice as query parameter
