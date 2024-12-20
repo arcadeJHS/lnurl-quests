@@ -6,6 +6,7 @@ import {
   ValidationPipe,
   UseGuards,
   UseFilters,
+  HttpException,
 } from '@nestjs/common';
 import {
   ApiHeader,
@@ -50,6 +51,10 @@ export class QuestValidateController {
     type: ValidationHttpExceptionResponse<QuestValidationError>,
   })
   async validate(@Body() validateQuestDto: ValidateQuestDto): Promise<string> {
-    return this.questValidationService.validateQuest(validateQuestDto);
+    try {
+      return await this.questValidationService.validateQuest(validateQuestDto);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 }

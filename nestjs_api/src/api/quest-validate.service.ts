@@ -1,4 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { QuestsService } from '../quests/quests.service';
 import { ValidateQuestDto } from '@quests/dto/validate-quest.dto';
 import { ClaimService } from '../claim/claim.service';
@@ -29,24 +33,15 @@ export class QuestValidationService {
 
       // Verify the quest is active, has not ended, and has rewards left to claim
       if (!quest.active) {
-        throw new HttpException(
-          QuestValidationError.QUEST_IS_NOT_ACTIVE,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException(QuestValidationError.QUEST_IS_NOT_ACTIVE);
       }
 
       if (new Date(quest.endDate) <= new Date()) {
-        throw new HttpException(
-          QuestValidationError.QUEST_HAS_ENDED,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException(QuestValidationError.QUEST_HAS_ENDED);
       }
 
       if (quest.claimedRewards >= quest.totalRewards) {
-        throw new HttpException(
-          QuestValidationError.NO_REWARDS_LEFT,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException(QuestValidationError.NO_REWARDS_LEFT);
       }
 
       // Create a new claim for the quest
@@ -66,16 +61,13 @@ export class QuestValidationService {
       });
 
       if (claim.status === ClaimStatus.REJECTED) {
-        throw new HttpException(
-          QuestValidationError.INVALID_SOLUTION,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException(QuestValidationError.INVALID_SOLUTION);
       }
 
       // The token to be used in /api/claim/reward
       return claim._id;
     } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      throw new InternalServerErrorException(error.message);
     }
   }
 }

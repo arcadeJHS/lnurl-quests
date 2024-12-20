@@ -6,6 +6,7 @@ import {
   Get,
   Query,
   UseFilters,
+  HttpException,
 } from '@nestjs/common';
 import { ApiHeader, ApiTags, ApiBadRequestResponse } from '@nestjs/swagger';
 import { ApiKeyGuard } from '@common/guards/api-key.guard';
@@ -42,6 +43,12 @@ export class ClaimRewardController {
   async generateWithdrawUrl(
     @Query() createWithdrawDto: CreateWithdrawDto,
   ): Promise<LNBitsLnurlData> {
-    return await this.claimRewardService.generateWithdrawUrl(createWithdrawDto);
+    try {
+      return await this.claimRewardService.generateWithdrawUrl(
+        createWithdrawDto,
+      );
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 }

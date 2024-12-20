@@ -2,8 +2,9 @@ import {
   Query,
   Inject,
   Injectable,
-  HttpException,
-  HttpStatus,
+  UnauthorizedException,
+  BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 // import { AmountValidator } from '../lnurl/validators/amount.validator';
 import { CreateWithdrawDto } from '../lnurl/dto/withdraw.dto';
@@ -22,36 +23,6 @@ export class ClaimRewardService {
     private readonly claimService: ClaimService,
     private readonly questService: QuestsService,
   ) {}
-
-  /*
-  TODO: move HttpException handling outside the service, to the controller!!!
-
-  Implement a custom exception:
-  export class ValidationException extends Error {
-    constructor(message: string) {
-      super(message);
-      this.name = 'CustomException';
-    }
-  }
-
-  Then in the service:
-  import { ValidationException } from './custom-exception';
-
-  if (!claimId) {
-    throw new ValidationException(ClaimRewardError.INVALID_TOKEN);
-  }
-
-  Then in the controller:
-  try {
-    await this.claimRewardService.generateWithdrawUrl(dto);
-  } catch (error) {
-    if (error instanceof ValidationException) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
-    throw error;
-  }
-   
-   */
   async generateWithdrawUrl(
     @Query() createWithdrawDto: CreateWithdrawDto,
   ): Promise<LNBitsLnurlData> {
@@ -73,30 +44,21 @@ export class ClaimRewardService {
       const claimId = createWithdrawDto.token;
 
       if (!claimId) {
-        throw new HttpException(
-          ClaimRewardError.INVALID_TOKEN,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new UnauthorizedException(ClaimRewardError.INVALID_TOKEN);
       }
 
       // get claim document by claimId
       const claim = await this.claimService.findOne(claimId);
 
       if (!claim) {
-        throw new HttpException(
-          ClaimRewardError.INVALID_CLAIM,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException(ClaimRewardError.INVALID_CLAIM);
       }
 
       // get quest document by claim.questId
       const quest = await this.questService.findOne(claim.questId);
 
       if (!quest) {
-        throw new HttpException(
-          ClaimRewardError.INVALID_QUEST,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException(ClaimRewardError.INVALID_QUEST);
       }
 
       const lnurl = await this.lightningService.generateWithdrawUrl({
@@ -107,7 +69,7 @@ export class ClaimRewardService {
 
       return lnurl;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException(error.message);
     }
   }
 }
