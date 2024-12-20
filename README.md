@@ -1,13 +1,14 @@
 # LNURL-Quests
 
-A basic REST API implementation that automatically rewards users for completing quests via LNURL-withdraw.
+A basic REST API implementation that automatically rewards users for completing quests via LNURL-withdraw.  
 The ```lnurl``` module implements a simple LNURL service.
 
 See: [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
 
-Requirements:
+## Requirements:
 1. git
 2. Docker and Docker Compose
+3. To complete LN payments, this implementation relies on an instance of ```LNBits``` (see ```LNBITS_URL``` and ```LNBITS_API_KEY``` configuration params in .env file).
 
 ## Getting started
 
