@@ -1,6 +1,6 @@
 # LNURL-Quests
 
-A core and basic implementation of a REST API able to automatically reward users for quest completion by paying through LNURL-withdraw.  
+A basic REST API implementation that automatically rewards users for completing quests via LNURL-withdraw.
 The ```lnurl``` module implements a simple LNURL service.
 
 See: [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
