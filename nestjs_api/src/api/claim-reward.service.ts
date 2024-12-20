@@ -26,7 +26,7 @@ export class ClaimRewardService {
   async generateWithdrawUrl(
     @Query() createWithdrawDto: CreateWithdrawDto,
   ): Promise<LNBitsGenerateWithdrawUrlResponse> {
-    // TODO: move this logic to the quest creation logic
+    // TODO: move this validation to the quest creation logic
     // this.amountValidator.validate(
     //   createWithdrawDto.minAmount,
     //   createWithdrawDto.maxAmount,
@@ -39,17 +39,6 @@ export class ClaimRewardService {
      * 4. The quest contains the following fields:
      * - rewardAmount: we can use this to set the minWithdrawable and maxWithdrawable fields in the LNURL.
      * - title: we can use this to set the defaultDescription field in the LNURL, for instance `Claim your reward for completing the quest: ${title}`.
-     *
-     * 2. We have succesfully validated the scenario submitted by the user against the quest's conditions.
-     */
-
-    /**
-     * This method generates a withdraw URL similar to:
-     * "http://localhost:3000/generateWithdrawParams?q=fde2c82bdc78ff7eda48de478a9412d785fa988cc1f16c8e89c0a82af138168b"
-     *
-     * Here, the "q" param is the "lnurl.secret" that will be used to uniquely identify the withdraw in subsequent operations.
-     * TODO: add the withdraw request params to DB, using the param "lnurl.secret" as UUID to identify it in subsequent operations
-     * TODO: params to add to withdraws DB: secret (as ID), minWithdrawable, maxWithdrawable, defaultDescription
      */
     try {
       const claimId = createWithdrawDto.token;

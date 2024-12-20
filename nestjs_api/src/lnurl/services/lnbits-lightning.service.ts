@@ -84,11 +84,10 @@ export class LnbitsLightningService implements OnModuleInit {
 
   async onModuleInit() {
     this.lnurlServer = lnurl.createServer({
-      // TODO: define host and port from in .env
-      host: 'localhost',
-      port: 3000,
-      endpoint: '/handleWithdrawRequest',
+      host: this.configService.get('app.host'),
+      port: this.configService.get('app.port'),
       listen: false,
+      endpoint: '/handleWithdrawRequest',
       lightning: new LNBitsBackend({
         apiKey: this.configService.get('lightning.apiKey'),
         url: this.configService.get('lightning.lnbitsUrl'),

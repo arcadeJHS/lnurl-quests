@@ -21,7 +21,8 @@ Add your ```.env``` configuration file in the root of the ```nestjs_api``` folde
 An example configuration is provided in ```.env.example```:
 ```
 MONGODB_URI=mongodb://lnurl_user:lnurl_password@localhost:27017/lnurl-quests
-BASE_URL=http://localhost:3000
+HOST=http://localhost
+PORT=3000
 LNBITS_URL=https://lb1.yourdomain.wtf/
 LNBITS_API_KEY=123a123b123c123d
 API_KEY=123a123b123c123d
@@ -203,6 +204,7 @@ This request update claim status to ```claimed```, and returns LNURL-withdraw da
 - Improve lightning funds management.
 - Refactor the lnurl module in order to make it pluggable and swappable, not relying on a single implementation. Every new implementation should adhere to a common interface. A plugin system? Libs inside a NestJS workspace? An external service required as a dependency in the API application? Or maybe the LNURL-withdraw should be a pluggable dedicated second service, used by this API. To be explored.
 - Migrate from LNRL-whithdraw to Bolt12 (in the future...)?
+- Improve management of worst case scenarios.
 - Improve API error management and output documentation for Swagger.
 - Improve tests. Currently only a few "logic-heavy" files are covered.
 - Test a LN nodes network with Polar (see: https://lightningpolar.com/)?
