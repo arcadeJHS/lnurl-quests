@@ -37,6 +37,19 @@ ALLOWED_ORIGINS=http://localhost:3000,https://other-domain.com
 > Use the param ```API_KEY``` in the .env file.
 > LNBITS_API_KEY: required only to complete the payment. Not necessary to generate a LNURL-whitdraw.
 
+Also, add a new (or edit the existing) ```.env.docker``` file.  
+This is used by Docker and in app to configure and access MongoDB.
+```
+MONGO_ROOT_USERNAME=admin
+MONGO_ROOT_PASSWORD=secret
+MONGO_APP_USERNAME=lnurl_user
+MONGO_APP_PASSWORD=lnurl_password
+
+# Update MongoDB URI in your .env to use these credentials
+MONGODB_URI=mongodb://lnurl_user:lnurl_password@localhost:27017/lnurl-quests
+``` 
+
+
 Start the Docker containers:
 
 ```bash
