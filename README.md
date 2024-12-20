@@ -1,12 +1,12 @@
 # LNURL-Quests
 
-A basic REST API implementation that automatically rewards users for completing quests via LNURL-withdraw.  
+A basic REST API implementation that automatically rewards users for completing quests via ```LNURL-withdraw```.  
 The ```lnurl``` module implements a simple LNURL service.
 
 See: [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
 
 ## Introduction
-LNURL-whitdraw is a quite complex process, but that can have many interesting use cases.  
+LNURL-withdraw is a quite complex process, but that can have many interesting use cases.  
 Basically, it is a protocol specification that makes it much easier and more user-friendly to withdraw Bitcoin from services using the Lightning Network.   Without LNURL-withdraw, receiving Lightning payments requires generating an invoice first, then somehow communicating that invoice to the sender.  
 This process is cumbersome, especially on mobile devices.  
 Instead of asking for Lightning invoice, a service could display a "withdraw" QR code which contains a specialized LNURL.  
@@ -60,7 +60,7 @@ ALLOWED_ORIGINS=http://localhost:3000,https://other-domain.com
 
 > Note: API requests need to be authorized by a ```X-Api-Key``` in the header of the request.   
 > Use the param ```API_KEY``` in the .env file.
-> LNBITS_API_KEY: required only to complete the payment. Not necessary to generate a LNURL-whitdraw.
+> LNBITS_API_KEY: required only to complete the payment. Not necessary to generate a LNURL-withdraw.
 
 Also, add a new (or edit the existing) ```.env.docker``` file.  
 This is used by Docker and in app to configure and access MongoDB.
