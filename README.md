@@ -5,6 +5,30 @@ The ```lnurl``` module implements a simple LNURL service.
 
 See: [LUD-03: withdrawRequest](https://github.com/lnurl/luds/blob/luds/03.md).
 
+## Introduction
+LNURL-whitdraw is a quite complex process, but that can have many interesting use cases.  
+Basically, it is a protocol specification that makes it much easier and more user-friendly to withdraw Bitcoin from services using the Lightning Network.   Without LNURL-withdraw, receiving Lightning payments requires generating an invoice first, then somehow communicating that invoice to the sender.  
+This process is cumbersome, especially on mobile devices.  
+Instead of asking for Lightning invoice, a service could display a "withdraw" QR code which contains a specialized LNURL.  
+With LNURL-withdraw, the process is:  
+1. A service (the API implemented in this repo) provides a short LNURL (or its QR code version).
+2. A LNURL enabled wallet scans/opens it, decodes it, and use it to make a GET request to the service.
+3. The response is a JSON containing al the params required to generate and ask for a payment:
+    ```json
+    {
+        "tag": "withdrawRequest", // type of LNURL
+        "callback": "string", // The URL which LN SERVICE would accept a withdrawal Lightning invoice as query parameter
+        "k1": "string", // Random or non-random string to identify the user's LN WALLET when using the callback URL
+        "defaultDescription": "string", // A default withdrawal invoice description
+        "minWithdrawable": "number", // Min amount (in millisatoshis) the user can withdraw from LN SERVICE, or 0
+        "maxWithdrawable": "number", // Max amount (in millisatoshis) the user can withdraw from LN SERVICE, or equal to minWithdrawable if the user has no choice over the amounts
+    }
+    ```
+4. The wallet displays a withdraw dialog where the user can specify how much to withdraw (bounded by minWithdrawable and maxWithdrawable), or an error.
+5. Once accepted, the wallet automatically generates a ```bolt11 invoice```, and makes a GET call to the service ```callback``` url appending the ```k1``` param and the invoice: ```https://<service.url>?k1={k1}&pr={pr}```.
+6. The service sends a ```{"status": "OK"}``` or ```{"status": "ERROR", "reason": "error details..."}``` JSON response, and then attempts to pay the invoices asynchronously.
+7. If the call was successful, the wallet only needs to wait for the incoming payment.
+
 ## Requirements:
 1. git
 2. Docker and Docker Compose
