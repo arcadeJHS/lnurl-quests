@@ -187,6 +187,7 @@ export class LnbitsLightningService implements OnModuleInit {
       - The server receives this request, and extracts the "pr" parameter in the handleWithdrawCallback method. 
    */
   async handleWithdrawCallback(k1: string, pr: string) {
+    // TODO: add exceptions handling
     // Check if the withdraw is (still) valid
     const withdraw = await this.withdrawRepository.findUnusedByK1(k1);
 
